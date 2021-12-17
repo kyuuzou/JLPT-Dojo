@@ -1,0 +1,105 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Gun.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
+
+// Sets default values
+AGun::AGun()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	this->Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	this->SetRootComponent(this->Root);
+
+	this->Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	this->Mesh->SetupAttachment(this->Root);
+}
+
+void AGun::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+AController* AGun::GetOwnerController() const {
+	APawn* owner = Cast<APawn>(this->GetOwner());
+
+	if (owner == nullptr) {
+		return nullptr;
+	}
+
+	return owner->GetController();
+}
+
+bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
+	AController* OwnerController = this->GetOwnerController();
+
+	if (OwnerController == nullptr) {
+		return false;
+	}
+
+	FVector location;
+	FRotator rotation;
+
+	OwnerController->GetPlayerViewPoint(OUT location, OUT rotation);
+	FVector shotDirection = -rotation.Vector();
+
+	FVector end = location + rotation.Vector() * this->MaxRange;
+
+	FCollisionQueryParams queryParameters;
+	queryParameters.AddIgnoredActor(this);
+	queryParameters.AddIgnoredActor(this->GetOwner());
+
+	return this->GetWorld()->LineTraceSingleByChannel(
+		OUT HitResult,
+		location,
+		end,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		queryParameters
+	);
+}
+
+void AGun::PullTrigger()
+{
+	UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("MuzzleFlashSocket"));
+	UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("MuzzleFlashSound"));
+
+	FHitResult HitResult;
+	FVector ShotDirection;
+
+	if (this->GunTrace(HitResult, ShotDirection)) {
+		//DrawDebugPoint(this->GetWorld(), hitResult.Location, 20.0f, FColor::Red, true);
+
+		// pulling it a bit back, so it doesn't spawn inside the target
+		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
+		FVector ShotLocation = HitResult.Location;
+		
+		UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->ImpactSound, ShotLocation);
+
+		UGameplayStatics::SpawnEmitterAtLocation(
+			this->GetWorld(),
+			this->ImpactEffect,
+			ShotLocation,
+			ShotDirection.Rotation()
+		);
+
+		AActor* victim = HitResult.GetActor();
+
+		if (victim != nullptr) {
+			FPointDamageEvent damageEvent(this->Damage, HitResult, ShotDirection, nullptr);
+
+			AController* OwnerController = this->GetOwnerController();
+			victim->TakeDamage(this->Damage, damageEvent, OwnerController, this);
+		}
+	}
+}
+
+void AGun::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
