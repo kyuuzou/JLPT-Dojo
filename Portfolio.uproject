@@ -10,13 +10,18 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"AIModule"
+				"AIModule",
+				"Text3D"
 			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "Water",
+			"Enabled": true
+		},
+		{
+			"Name": "Text3D",
 			"Enabled": true
 		}
 	]
