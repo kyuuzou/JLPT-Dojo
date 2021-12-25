@@ -12,15 +12,16 @@ class PORTFOLIO_API ABlackboardActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABlackboardActor();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere)
+	TArray<FString> questions;
+
+	UPROPERTY()
+	TArray<class UText3DComponent*> textComponents;
 };
