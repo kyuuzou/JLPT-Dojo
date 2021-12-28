@@ -2,9 +2,11 @@
 
 
 #include "Gun.h"
+
+#include "BlackboardActor.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGun::AGun()
@@ -63,10 +65,12 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 	);
 }
 
-void AGun::PullTrigger()
+void AGun::PullTrigger(bool makeNoise)
 {
-	UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("MuzzleFlashSocket"));
-	UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("MuzzleFlashSound"));
+	if (makeNoise) {
+		UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("MuzzleFlashSocket"));
+		UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("MuzzleFlashSound"));
+	}
 
 	FHitResult HitResult;
 	FVector ShotDirection;
@@ -77,21 +81,23 @@ void AGun::PullTrigger()
 		// pulling it a bit back, so it doesn't spawn inside the target
 		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
 		FVector ShotLocation = HitResult.Location;
-		
-		UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->ImpactSound, ShotLocation);
 
-		UGameplayStatics::SpawnEmitterAtLocation(
-			this->GetWorld(),
-			this->ImpactEffect,
-			ShotLocation,
-			ShotDirection.Rotation()
-		);
+		if (makeNoise) {
+			UGameplayStatics::PlaySoundAtLocation(this->GetWorld(), this->ImpactSound, ShotLocation);
+
+			UGameplayStatics::SpawnEmitterAtLocation(
+				this->GetWorld(),
+				this->ImpactEffect,
+				ShotLocation,
+				ShotDirection.Rotation()
+			);
+		}
 
 		AActor* victim = HitResult.GetActor();
 
 		if (victim != nullptr) {
-            UE_LOG(LogTemp, Warning, TEXT("%s"), *victim->GetName());
-            
+			//UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: %s"), *victim->GetName());
+
 			FPointDamageEvent damageEvent(this->Damage, HitResult, ShotDirection, nullptr);
 
 			AController* OwnerController = this->GetOwnerController();
@@ -104,4 +110,17 @@ void AGun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FHitResult HitResult;
+	FVector ShotDirection;
+
+	if (this->GunTrace(HitResult, ShotDirection)) {
+		AActor* target = HitResult.GetActor();
+
+		//TODO: have a better way to determine if the actor needs to know that we're pointing at him
+		ABlackboardActor* blackboard = Cast<ABlackboardActor>(target);
+
+		if (blackboard != nullptr) {
+			blackboard->BePointedAt(HitResult);
+		}
+	}
 }

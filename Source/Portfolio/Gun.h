@@ -18,7 +18,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void PullTrigger();
+	void PullTrigger(bool makeNoise = true);
 
 protected:
 	// Called when the game starts or when spawned

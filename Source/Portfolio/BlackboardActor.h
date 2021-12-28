@@ -13,15 +13,37 @@ class PORTFOLIO_API ABlackboardActor : public AActor
 	
 public:	
 	ABlackboardActor();
+	class UText3DComponent* BePointedAt(FHitResult HitResult);
 	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual float TakeDamage(
+		float DamageAmount,
+		struct FDamageEvent const& DamageEvent,
+		class AController* EventInstigator,
+		AActor* DamageCauser
+	) override;
 
 private:
 	UPROPERTY(EditAnywhere)
-	TArray<FString> questions;
+	class UDataTable* DataTable;
+
+	bool handlingAnswer;
 
 	UPROPERTY()
-	TArray<class UText3DComponent*> textComponents;
+	UText3DComponent* RightAnswerComponent;
+
+	TArray<class UText3DComponent*> AnswerTextComponents;
+	TArray<class UText3DComponent*> TextComponents;
+
+	UFUNCTION()
+	UText3DComponent* AddLine(
+		class UText3DComponent* templateComponent, FString line, FVector& location, float lineHeight
+	);
+
+	void Clear();
+	static void SetColor(class UText3DComponent* TextComponent, FLinearColor Color);
+	void SetRandomQuestion();
+	void SetQuestion(int index);
 };
