@@ -20,7 +20,7 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	this->Health = this->MaxHealth;
-	this->SetFirstPerson(false);
+	this->SetFirstPerson(true);
 	this->Gun = this->GetWorld()->SpawnActor<AGun>(this->GunClass);
 	
 	USkeletalMeshComponent* mesh = this->GetMesh();
