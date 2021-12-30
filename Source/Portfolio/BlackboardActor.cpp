@@ -66,8 +66,7 @@ UText3DComponent* ABlackboardActor::BePointedAt(FHitResult HitResult) {
 
 			ClosestTextComponent = TextComponent;
 			MinDistance = Distance;
-		}
-		else {
+		} else {
 			if (!handlingAnswer) {
 				ABlackboardActor::SetColor(TextComponent, FLinearColor::White);
 			}
@@ -169,7 +168,7 @@ float ABlackboardActor::TakeDamage(
 	AActor* DamageCauser
 ) {
 	if (this->handlingAnswer) {
-		return;
+		return 0.0f;
 	}
 
 	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID)) {
@@ -188,6 +187,7 @@ float ABlackboardActor::TakeDamage(
 				ABlackboardActor::SetColor(textComponent, FLinearColor::Green);
 			} else {
 				ABlackboardActor::SetColor(textComponent, FLinearColor::Red);
+				ABlackboardActor::SetColor(this->RightAnswerComponent, FLinearColor::Green);
 			}
 
 			FTimerHandle timerHandle;
