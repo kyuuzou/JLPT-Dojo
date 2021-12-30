@@ -57,6 +57,12 @@ void AShooterCharacter::SetFirstPerson(bool FirstPerson) {
 	this->firstPerson = FirstPerson;
 	this->FirstPersonCamera->SetActive(FirstPerson);
 	this->ThirdPersonCamera->SetActive(!FirstPerson);
+	
+	if (FirstPerson) {
+		this->GetMesh()->HideBoneByName("head", EPhysBodyOp::PBO_MAX);
+	} else {
+		this->GetMesh()->UnHideBoneByName("head");
+	}
 }
 
 // Called to bind functionality to input
