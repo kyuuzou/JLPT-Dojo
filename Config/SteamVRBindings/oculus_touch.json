@@ -6,7 +6,140 @@
 	{
 		"/actions/main":
 		{
-			"sources": [],
+			"sources": [
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/grip",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/GrabLeft"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/GrabRight"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/TriggerLeft"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/trigger",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/TriggerRight"
+						}
+					}
+				},
+				{
+					"mode": "button",
+					"path": "/user/hand/left/input/application_menu",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/MenuToggleLeft"
+						}
+					}
+				},
+				{
+					"mode": "joystick",
+					"path": "/user/hand/left/input/joystick",
+					"inputs":
+					{
+						"position":
+						{
+							"output": "/actions/main/in/MovementAxisLeft_X,MovementAxisLeft_Y X Y_axis2d"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/grip",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/GrabAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/GrabAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "joystick",
+					"path": "/user/hand/right/input/joystick",
+					"inputs":
+					{
+						"position":
+						{
+							"output": "/actions/main/in/MovementAxisRight_X,MovementAxisRight_Y X Y_axis2d"
+						}
+					}
+				},
+				{
+					"mode": "button",
+					"path": "/user/hand/right/input/a",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/MovementAxisRight_Y axis"
+						}
+					}
+				}
+			],
 			"poses": [
 				{
 					"output": "/actions/main/in/controllerleft",
@@ -40,5 +173,5 @@
 			]
 		}
 	},
-	"description": "Portfolio-17735300"
+	"description": ""
 }

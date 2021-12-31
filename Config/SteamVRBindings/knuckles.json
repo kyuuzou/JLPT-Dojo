@@ -9,23 +9,34 @@
 			"sources": [
 				{
 					"mode": "button",
-					"path": "/user/hand/right/input/a",
+					"path": "/user/hand/left/input/grip",
 					"inputs":
 					{
-						"click":
+						"touch":
 						{
-							"output": "/actions/main/in/Jump"
+							"output": "/actions/main/in/GrabLeft"
 						}
 					}
 				},
 				{
 					"mode": "button",
-					"path": "/user/hand/right/input/b",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"touch":
+						{
+							"output": "/actions/main/in/GrabRight"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
 					"inputs":
 					{
 						"click":
 						{
-							"output": "/actions/main/in/Toggle First-Person"
+							"output": "/actions/main/in/TriggerLeft"
 						}
 					}
 				},
@@ -36,7 +47,7 @@
 					{
 						"click":
 						{
-							"output": "/actions/main/in/Shoot"
+							"output": "/actions/main/in/TriggerRight"
 						}
 					}
 				},
@@ -47,7 +58,62 @@
 					{
 						"position":
 						{
-							"output": "/actions/main/in/Move_X,Move_Y X Y_axis2d"
+							"output": "/actions/main/in/MovementAxisLeft_X,MovementAxisLeft_Y X Y_axis2d"
+						}
+					}
+				},
+				{
+					"mode": "force_sensor",
+					"path": "/user/hand/left/input/grip",
+					"inputs":
+					{
+						"force":
+						{
+							"output": "/actions/main/in/GrabAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "force_sensor",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"force":
+						{
+							"output": "/actions/main/in/GrabAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "joystick",
+					"path": "/user/hand/right/input/thumbstick",
+					"inputs":
+					{
+						"position":
+						{
+							"output": "/actions/main/in/MovementAxisRight_X,MovementAxisRight_Y X Y_axis2d"
 						}
 					}
 				}
@@ -85,5 +151,5 @@
 			]
 		}
 	},
-	"description": "Portfolio-17735300"
+	"description": ""
 }

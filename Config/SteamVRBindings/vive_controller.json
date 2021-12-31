@@ -6,7 +6,140 @@
 	{
 		"/actions/main":
 		{
-			"sources": [],
+			"sources": [
+				{
+					"mode": "button",
+					"path": "/user/hand/left/input/grip",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/GrabLeft"
+						}
+					}
+				},
+				{
+					"mode": "button",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/GrabRight"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/TriggerLeft"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/trigger",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/TriggerRight"
+						}
+					}
+				},
+				{
+					"mode": "button",
+					"path": "/user/hand/left/input/application_menu",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/MenuToggleLeft"
+						}
+					}
+				},
+				{
+					"mode": "button",
+					"path": "/user/hand/right/input/application_menu",
+					"inputs":
+					{
+						"click":
+						{
+							"output": "/actions/main/in/MenuToggleRight"
+						}
+					}
+				},
+				{
+					"mode": "trackpad",
+					"path": "/user/hand/left/input/trackpad",
+					"inputs":
+					{
+						"position":
+						{
+							"output": "/actions/main/in/MovementAxisLeft_X,MovementAxisLeft_Y X Y_axis2d"
+						}
+					}
+				},
+				{
+					"mode": "scalar_constant",
+					"path": "/user/hand/left/input/grip",
+					"inputs":
+					{
+						"value":
+						{
+							"output": "/actions/main/in/GrabAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/left/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisLeft axis"
+						}
+					}
+				},
+				{
+					"mode": "trigger",
+					"path": "/user/hand/right/input/trigger",
+					"inputs":
+					{
+						"pull":
+						{
+							"output": "/actions/main/in/TriggerAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "scalar_constant",
+					"path": "/user/hand/right/input/grip",
+					"inputs":
+					{
+						"value":
+						{
+							"output": "/actions/main/in/GrabAxisRight axis"
+						}
+					}
+				},
+				{
+					"mode": "trackpad",
+					"path": "/user/hand/right/input/trackpad",
+					"inputs":
+					{
+						"position":
+						{
+							"output": "/actions/main/in/MovementAxisRight_X,MovementAxisRight_Y X Y_axis2d"
+						}
+					}
+				}
+			],
 			"poses": [
 				{
 					"output": "/actions/main/in/controllerleft",
@@ -40,5 +173,5 @@
 			]
 		}
 	},
-	"description": "Portfolio-17735300"
+	"description": ""
 }

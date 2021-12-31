@@ -58,7 +58,7 @@ UText3DComponent* ABlackboardActor::BePointedAt(FHitResult HitResult) {
 		float Distance = FVector::Dist(HitResult.ImpactPoint, Location);
 		float DistanceFromRow = abs(Location.Z - HitResult.ImpactPoint.Z);
 
-		if (Distance < MinDistance && DistanceFromRow < lineHeight) {
+		if (Distance < MinDistance /* && DistanceFromRow < lineHeight*/) {
 			if (!handlingAnswer) {
 				ABlackboardActor::SetColor(ClosestTextComponent, FLinearColor::White);
 				ABlackboardActor::SetColor(TextComponent, FLinearColor::Yellow);
