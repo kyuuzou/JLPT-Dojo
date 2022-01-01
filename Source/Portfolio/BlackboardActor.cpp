@@ -110,21 +110,23 @@ void ABlackboardActor::SetQuestion(int index) {
 
 	// set max width to width of collision box
 	UBoxComponent* box = this->FindComponentByClass<UBoxComponent>();
-	FVector boxExtent = box->Bounds.BoxExtent;
+	FBoxSphereBounds localBounds = box->CalcLocalBounds();
+	FVector localBoxExtent = localBounds.BoxExtent;
 
 	UText3DComponent* templateComponent = this->FindComponentByClass<UText3DComponent>();
 	float textScaleX = templateComponent->GetRelativeScale3D().X;
 
-	float maxWidth = boxExtent.X * 2.0f * (1.0f / textScaleX);
+	float maxWidth = localBoxExtent.X * 2.0f * (1.0f / textScaleX);
 	templateComponent->SetMaxWidth(maxWidth);
 
 	// move to corner
+	FVector boxExtent = box->Bounds.BoxExtent;
 	FVector location = box->GetComponentLocation();
-	location.X -= boxExtent.X;
-	location.Y += 2.001f; // just enough so it doesn't Z-fight the chalkboard
+	location.X -= 2.001f;
+	location.Y -= boxExtent.Y; // just enough so it doesn't Z-fight the chalkboard
 	location.Z += boxExtent.Z;
 	templateComponent->SetWorldLocation(location);
-
+	
 	// position strings
 	TArray<FName> RowNames = this->DataTable->GetRowNames();
 	FQuestion* question = this->DataTable->FindRow<FQuestion>(RowNames[index], TEXT("Blackboard"));
