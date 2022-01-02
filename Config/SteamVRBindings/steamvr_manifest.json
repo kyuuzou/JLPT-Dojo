@@ -172,6 +172,34 @@
 			"type": "boolean"
 		},
 		{
+			"name": "/actions/main/in/Jump",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/Toggle First-Person",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/Shoot",
+			"type": "boolean"
+		},
+		{
+			"name": "/actions/main/in/Move_Y axis",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/LookUp axis",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/Move_X axis",
+			"type": "vector1"
+		},
+		{
+			"name": "/actions/main/in/LookRight axis",
+			"type": "vector1"
+		},
+		{
 			"name": "/actions/main/in/MovementAxisLeft_X,MovementAxisLeft_Y X Y_axis2d",
 			"type": "vector2"
 		},
@@ -192,30 +220,6 @@
 			"type": "vector1"
 		},
 		{
-			"name": "/actions/main/in/SpectatorYaw axis",
-			"type": "vector1"
-		},
-		{
-			"name": "/actions/main/in/SpectatorPitch axis",
-			"type": "vector1"
-		},
-		{
-			"name": "/actions/main/in/SpectatorFOV axis",
-			"type": "vector1"
-		},
-		{
-			"name": "/actions/main/in/SpectatorMoveForward axis",
-			"type": "vector1"
-		},
-		{
-			"name": "/actions/main/in/SpectatorMoveRight axis",
-			"type": "vector1"
-		},
-		{
-			"name": "/actions/main/in/SpectatorMoveUp axis",
-			"type": "vector1"
-		},
-		{
 			"name": "/actions/main/in/MovementAxisRight_X,MovementAxisRight_Y X Y_axis2d",
 			"type": "vector2"
 		},
@@ -231,6 +235,106 @@
 		}
 	],
 	"default_bindings": [
+		{
+			"controller_type": "gamepad",
+			"binding_url": "gamepad.json"
+		},
+		{
+			"controller_type": "holographic_controller",
+			"binding_url": "holographic_controller.json"
+		},
+		{
+			"controller_type": "hpmotioncontroller",
+			"binding_url": "hpmotioncontroller.json"
+		},
+		{
+			"controller_type": "indexhmd",
+			"binding_url": "indexhmd.json"
+		},
+		{
+			"controller_type": "knuckles",
+			"binding_url": "knuckles.json"
+		},
+		{
+			"controller_type": "oculus_touch",
+			"binding_url": "oculus_touch.json"
+		},
+		{
+			"controller_type": "rift",
+			"binding_url": "rift.json"
+		},
+		{
+			"controller_type": "vive",
+			"binding_url": "vive.json"
+		},
+		{
+			"controller_type": "vive_controller",
+			"binding_url": "vive_controller.json"
+		},
+		{
+			"controller_type": "vive_cosmos_controller",
+			"binding_url": "vive_cosmos_controller.json"
+		},
+		{
+			"controller_type": "vive_pro",
+			"binding_url": "vive_pro.json"
+		},
+		{
+			"controller_type": "vive_tracker",
+			"binding_url": "vive_tracker.json"
+		},
+		{
+			"controller_type": "vive_tracker_camera",
+			"binding_url": "vive_tracker_camera.json"
+		},
+		{
+			"controller_type": "vive_tracker_chest",
+			"binding_url": "vive_tracker_chest.json"
+		},
+		{
+			"controller_type": "vive_tracker_handed",
+			"binding_url": "vive_tracker_handed.json"
+		},
+		{
+			"controller_type": "vive_tracker_keyboard",
+			"binding_url": "vive_tracker_keyboard.json"
+		},
+		{
+			"controller_type": "vive_tracker_left_elbow",
+			"binding_url": "vive_tracker_left_elbow.json"
+		},
+		{
+			"controller_type": "vive_tracker_left_foot",
+			"binding_url": "vive_tracker_left_foot.json"
+		},
+		{
+			"controller_type": "vive_tracker_left_knee",
+			"binding_url": "vive_tracker_left_knee.json"
+		},
+		{
+			"controller_type": "vive_tracker_left_shoulder",
+			"binding_url": "vive_tracker_left_shoulder.json"
+		},
+		{
+			"controller_type": "vive_tracker_right_elbow",
+			"binding_url": "vive_tracker_right_elbow.json"
+		},
+		{
+			"controller_type": "vive_tracker_right_foot",
+			"binding_url": "vive_tracker_right_foot.json"
+		},
+		{
+			"controller_type": "vive_tracker_right_knee",
+			"binding_url": "vive_tracker_right_knee.json"
+		},
+		{
+			"controller_type": "vive_tracker_right_shoulder",
+			"binding_url": "vive_tracker_right_shoulder.json"
+		},
+		{
+			"controller_type": "vive_tracker_waist",
+			"binding_url": "vive_tracker_waist.json"
+		},
 		{
 			"controller_type": "knuckles",
 			"binding_url": "knuckles.json"
@@ -370,17 +474,18 @@
 			"/actions/main/in/TriggerRight": "TriggerRight",
 			"/actions/main/in/MenuToggleLeft": "MenuToggleLeft",
 			"/actions/main/in/MenuToggleRight": "MenuToggleRight",
+			"/actions/main/in/Jump": "Jump",
+			"/actions/main/in/Toggle First-Person": "Toggle First-Person",
+			"/actions/main/in/Shoot": "Shoot",
+			"/actions/main/in/Move_Y axis": "Move_Y",
+			"/actions/main/in/LookUp axis": "LookUp",
+			"/actions/main/in/Move_X axis": "Move_X",
+			"/actions/main/in/LookRight axis": "LookRight",
 			"/actions/main/in/MovementAxisLeft_X,MovementAxisLeft_Y X Y_axis2d": "MovementAxisLeft",
 			"/actions/main/in/GrabAxisLeft axis": "GrabAxisLeft",
 			"/actions/main/in/TriggerAxisLeft axis": "TriggerAxisLeft",
 			"/actions/main/in/TriggerAxisRight axis": "TriggerAxisRight",
 			"/actions/main/in/GrabAxisRight axis": "GrabAxisRight",
-			"/actions/main/in/SpectatorYaw axis": "SpectatorYaw",
-			"/actions/main/in/SpectatorPitch axis": "SpectatorPitch",
-			"/actions/main/in/SpectatorFOV axis": "SpectatorFOV",
-			"/actions/main/in/SpectatorMoveForward axis": "SpectatorMoveForward",
-			"/actions/main/in/SpectatorMoveRight axis": "SpectatorMoveRight",
-			"/actions/main/in/SpectatorMoveUp axis": "SpectatorMoveUp",
 			"/actions/main/in/MovementAxisRight_X,MovementAxisRight_Y X Y_axis2d": "MovementAxisRight",
 			"/actions/main/in/MovementAxisRight_Y axis": "MovementAxisRight_Y",
 			"/actions/main": "Main Game Actions"
