@@ -49,7 +49,6 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 
 	OwnerController->GetPlayerViewPoint(OUT location, OUT rotation);
 	FVector shotDirection = -rotation.Vector();
-
 	FVector end = location + rotation.Vector() * this->MaxRange;
 
 	FCollisionQueryParams queryParameters;
@@ -76,7 +75,7 @@ void AGun::PullTrigger(bool makeNoise)
 	FVector ShotDirection;
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
-		//DrawDebugPoint(this->GetWorld(), hitResult.Location, 20.0f, FColor::Red, true);
+		//DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
 
 		// pulling it a bit back, so it doesn't spawn inside the target
 		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
@@ -94,9 +93,10 @@ void AGun::PullTrigger(bool makeNoise)
 		}
 
 		AActor* victim = HitResult.GetActor();
+		UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: before victim"));
 
 		if (victim != nullptr) {
-			//UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: %s"), *victim->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: %s"), *victim->GetName());
 
 			FPointDamageEvent damageEvent(this->Damage, HitResult, ShotDirection, nullptr);
 
@@ -115,6 +115,8 @@ void AGun::Tick(float DeltaTime)
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
 		AActor* target = HitResult.GetActor();
+
+		//UE_LOG(LogTemp, Warning, TEXT("Bsdfjkfsdnkjsdfnjkfdjnk"));
 
 		//TODO: have a better way to determine if the actor needs to know that we're pointing at him
 		ABlackboardActor* blackboard = Cast<ABlackboardActor>(target);
