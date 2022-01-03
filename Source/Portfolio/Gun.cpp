@@ -86,18 +86,18 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 void AGun::PullTrigger(bool makeNoise)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("AGun::PullTrigger"));
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("AGun::PullTrigger"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("AGun::PullTrigger"));
 
 	if (makeNoise) {
-		UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("MuzzleFlashSocket"));
-		UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("MuzzleFlashSound"));
+		UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("SOCKET_Muzzle"));
+		UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("SOCKET_Muzzle"));
 	}
 
 	FHitResult HitResult;
 	FVector ShotDirection;
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
-		DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
+		//DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
 
 		// pulling it a bit back, so it doesn't spawn inside the target
 		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
