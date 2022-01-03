@@ -180,10 +180,6 @@
 			"type": "boolean"
 		},
 		{
-			"name": "/actions/main/in/Shoot",
-			"type": "boolean"
-		},
-		{
 			"name": "/actions/main/in/Move_Y axis",
 			"type": "vector1"
 		},
@@ -476,7 +472,6 @@
 			"/actions/main/in/MenuToggleRight": "MenuToggleRight",
 			"/actions/main/in/Jump": "Jump",
 			"/actions/main/in/Toggle First-Person": "Toggle First-Person",
-			"/actions/main/in/Shoot": "Shoot",
 			"/actions/main/in/Move_Y axis": "Move_Y",
 			"/actions/main/in/LookUp axis": "LookUp",
 			"/actions/main/in/Move_X axis": "Move_X",

@@ -59,9 +59,9 @@ void AShooterCharacter::SetFirstPerson(bool FirstPerson) {
 	this->ThirdPersonCamera->SetActive(!FirstPerson);
 	
 	if (FirstPerson) {
-		this->GetMesh()->HideBoneByName("head", EPhysBodyOp::PBO_MAX);
+		this->GetMesh()->HideBoneByName("neck_01", EPhysBodyOp::PBO_MAX);
 	} else {
-		this->GetMesh()->UnHideBoneByName("head");
+		this->GetMesh()->UnHideBoneByName("neck_01");
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "BlackboardActor.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "DrawDebugHelpers.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -16,21 +17,31 @@ AGun::AGun()
 
 	this->Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	this->SetRootComponent(this->Root);
-
-	this->Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	this->Mesh->SetupAttachment(this->Root);
 }
 
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
 
+	this->Mesh = this->FindComponentByClass<USkeletalMeshComponent>();
+
+	if (this->Mesh == nullptr) {
+		this->Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+		this->Mesh->SetupAttachment(this->Root);
+	}
+
+	this->Mesh->SetSimulatePhysics(UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled());
 }
 
 AController* AGun::GetOwnerController() const {
 	APawn* owner = Cast<APawn>(this->GetOwner());
 
 	if (owner == nullptr) {
+		if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled()) {
+			// TODO: assign an owner to the gun when the player picks it up
+			return this->GetWorld()->GetFirstPlayerController();
+		}
+
 		return nullptr;
 	}
 
@@ -44,14 +55,22 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 		return false;
 	}
 
-	FVector location;
-	FRotator rotation;
+	FName muzzleName = FName(TEXT("MuzzleLocation"));
+	USceneComponent* muzzleLocationComponent = Cast<USceneComponent>(
+		this->GetDefaultSubobjectByName(muzzleName)
+	);
 
-	OwnerController->GetPlayerViewPoint(OUT location, OUT rotation);
+	FVector location = muzzleLocationComponent->GetComponentLocation();
+	FRotator rotation = muzzleLocationComponent->GetComponentRotation();
+
 	FVector shotDirection = -rotation.Vector();
 	FVector end = location + rotation.Vector() * this->MaxRange;
 
+	const FName TraceTag("DebugTraceTag");
+	this->GetWorld()->DebugDrawTraceTag = TraceTag;
+	
 	FCollisionQueryParams queryParameters;
+	//queryParameters.TraceTag = TraceTag;
 	queryParameters.AddIgnoredActor(this);
 	queryParameters.AddIgnoredActor(this->GetOwner());
 
@@ -66,6 +85,9 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 
 void AGun::PullTrigger(bool makeNoise)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("AGun::PullTrigger"));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("AGun::PullTrigger"));
+
 	if (makeNoise) {
 		UGameplayStatics::SpawnEmitterAttached(this->MuzzleFlash, this->Mesh, TEXT("MuzzleFlashSocket"));
 		UGameplayStatics::SpawnSoundAttached(this->MuzzleSound, this->Mesh, TEXT("MuzzleFlashSound"));
@@ -75,7 +97,7 @@ void AGun::PullTrigger(bool makeNoise)
 	FVector ShotDirection;
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
-		//DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
+		DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
 
 		// pulling it a bit back, so it doesn't spawn inside the target
 		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
