@@ -17,12 +17,18 @@ AGun::AGun()
 
 	this->Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	this->SetRootComponent(this->Root);
+
+	this->Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	this->Mesh->SetupAttachment(this->Root);
+
+	//this->Mesh->SetSimulatePhysics(UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled());
 }
 
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
 	this->Mesh = this->FindComponentByClass<USkeletalMeshComponent>();
 
 	if (this->Mesh == nullptr) {
@@ -31,6 +37,7 @@ void AGun::BeginPlay()
 	}
 
 	this->Mesh->SetSimulatePhysics(UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled());
+	*/
 }
 
 AController* AGun::GetOwnerController() const {
@@ -70,7 +77,7 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 	this->GetWorld()->DebugDrawTraceTag = TraceTag;
 	
 	FCollisionQueryParams queryParameters;
-	//queryParameters.TraceTag = TraceTag;
+	queryParameters.TraceTag = TraceTag;
 	queryParameters.AddIgnoredActor(this);
 	queryParameters.AddIgnoredActor(this->GetOwner());
 
