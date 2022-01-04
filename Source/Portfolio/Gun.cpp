@@ -67,6 +67,11 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 		this->GetDefaultSubobjectByName(muzzleName)
 	);
 
+	if (muzzleLocationComponent == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("AGun::GunTrace: Could not find muzzle!"));
+		return false;
+	}
+
 	FVector location = muzzleLocationComponent->GetComponentLocation();
 	FRotator rotation = muzzleLocationComponent->GetComponentRotation();
 
