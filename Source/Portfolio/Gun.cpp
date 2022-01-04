@@ -72,17 +72,24 @@ bool AGun::GunTrace(OUT FHitResult& HitResult, OUT FVector& ShotDirection) {
 		return false;
 	}
 
-	FVector location = muzzleLocationComponent->GetComponentLocation();
-	FRotator rotation = muzzleLocationComponent->GetComponentRotation();
+	FVector location;
+	FRotator rotation;
+
+	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled()) {
+		location = muzzleLocationComponent->GetComponentLocation();
+		rotation = muzzleLocationComponent->GetComponentRotation();
+	} else {
+		OwnerController->GetPlayerViewPoint(OUT location, OUT rotation);
+	}
 
 	FVector shotDirection = -rotation.Vector();
 	FVector end = location + rotation.Vector() * this->MaxRange;
-
-	const FName TraceTag("DebugTraceTag");
-	this->GetWorld()->DebugDrawTraceTag = TraceTag;
+	
+	//const FName TraceTag("DebugTraceTag");
+	//this->GetWorld()->DebugDrawTraceTag = TraceTag;
 	
 	FCollisionQueryParams queryParameters;
-	queryParameters.TraceTag = TraceTag;
+	//queryParameters.TraceTag = TraceTag;
 	queryParameters.AddIgnoredActor(this);
 	queryParameters.AddIgnoredActor(this->GetOwner());
 
