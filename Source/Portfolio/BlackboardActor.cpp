@@ -133,11 +133,13 @@ void ABlackboardActor::SetQuestion(int index) {
 
 	float lineHeight = boxExtent.Z / 3.0f;
 
-	this->AddLine(templateComponent, question->Instructions, location, lineHeight);
-	this->AddLine(templateComponent, question->Sentence, location, lineHeight);
+	//this->AddLine(templateComponent, question->Instructions, location, lineHeight);
+	this->AddLine(templateComponent, question->Sentence, location, lineHeight * 1.5f);
 
 	TArray<FString> answers = question->WrongAnswers;
-	answers.Add(question->RightAnswer);
+
+	int rightAnswerIndex = FCString::Atoi(*question->RightAnswer) - 1;
+	FString rightAnswer = question->WrongAnswers[rightAnswerIndex];
 
 	// shuffle answers
 	for (int i = answers.Num() - 1; i > 0; i--) {
@@ -148,10 +150,10 @@ void ABlackboardActor::SetQuestion(int index) {
 	}
 
 	for (int i = 0; i < answers.Num(); i++) {
-		bool isRightAnswer = answers[i] == question->RightAnswer;
+		bool isRightAnswer = answers[i] == rightAnswer;
 
-		FString answer = FString::Printf(TEXT("%d %s □"), i + 1, *answers[i]);
-		UText3DComponent* textComponent = this->AddLine(templateComponent, answer, location, lineHeight);
+		FString answer = FString::Printf(TEXT("□ %s"), *answers[i]);
+		UText3DComponent* textComponent = this->AddLine(templateComponent, answer, location, lineHeight * 1.25f);
 		this->AnswerTextComponents.Add(textComponent);
 
 		if (isRightAnswer) {
