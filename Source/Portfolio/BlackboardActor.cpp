@@ -46,13 +46,9 @@ UText3DComponent* ABlackboardActor::BePointedAt(FHitResult HitResult) {
 	float MinDistance = FLT_MAX;
 	UText3DComponent* ClosestTextComponent = nullptr;
 
-	UBoxComponent* box = this->FindComponentByClass<UBoxComponent>();
+	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
 	
-	if (box == nullptr) {
-		return nullptr;
-	}
-
-	FVector boxExtent = box->Bounds.BoxExtent;
+	FVector boxExtent = board->Bounds.BoxExtent;
 	float lineHeight = boxExtent.Z / 3.0f;
 	lineHeight += 10.0f; // TODO: figure out why the aim is off by about 5.0f
 
@@ -132,7 +128,7 @@ void ABlackboardActor::SetQuestion(int index) {
 	// move to corner
 	FVector location = board->GetRelativeLocation();
 	
-	location.X -= localBoxExtent.X;//localBounds.GetBox().GetSize().GetMax();
+	location.X -= localBoxExtent.X;
 	location.Y += 2.01f; // just enough so it doesn't Z-fight the chalkboard
 	location.Z = localBoxExtent.Z * 2.0f + lineHeight;
 

@@ -134,10 +134,10 @@ void AGun::PullTrigger(bool makeNoise)
 		}
 
 		AActor* victim = HitResult.GetActor();
-		UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: before victim"));
+		//UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: before victim"));
 
 		if (victim != nullptr) {
-			UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: %s"), *victim->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("Gun::PullTrigger: %s"), *victim->GetName());
 
 			FPointDamageEvent damageEvent(this->Damage, HitResult, ShotDirection, nullptr);
 
@@ -156,8 +156,6 @@ void AGun::Tick(float DeltaTime)
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
 		AActor* target = HitResult.GetActor();
-
-		//UE_LOG(LogTemp, Warning, TEXT("Bsdfjkfsdnkjsdfnjkfdjnk"));
 
 		//TODO: have a better way to determine if the actor needs to know that we're pointing at him
 		ABlackboardActor* blackboard = Cast<ABlackboardActor>(target);
