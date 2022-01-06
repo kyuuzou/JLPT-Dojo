@@ -20,7 +20,7 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	this->Health = this->MaxHealth;
-	this->SetFirstPerson(true);
+	this->SetFirstPerson(this->firstPerson);
 	this->Gun = this->GetWorld()->SpawnActor<AGun>(this->GunClass);
 	
 	USkeletalMeshComponent* mesh = this->GetMesh();
@@ -54,6 +54,10 @@ void AShooterCharacter::MoveRight(float AxisValue)
 }
 
 void AShooterCharacter::SetFirstPerson(bool FirstPerson) {
+	if (this->FirstPersonCamera == nullptr || this->ThirdPersonCamera == nullptr) {
+		return;
+	}
+
 	this->firstPerson = FirstPerson;
 	this->FirstPersonCamera->SetActive(FirstPerson);
 	this->ThirdPersonCamera->SetActive(!FirstPerson);

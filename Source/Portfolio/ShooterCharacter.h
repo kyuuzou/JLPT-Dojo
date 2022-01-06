@@ -53,7 +53,8 @@ private:
 	void SetFirstPerson(bool FirstPerson);
 	void ToggleFirstPerson();
 
-	bool firstPerson;
+	UPROPERTY(EditAnywhere)
+	bool firstPerson = false;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
