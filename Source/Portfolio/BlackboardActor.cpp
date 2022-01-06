@@ -24,7 +24,7 @@ UText3DComponent* ABlackboardActor::AddLine(
 	this->TextComponents.Add(textComponent);
 
 	textComponent->SetText(FText::FromString(line));
-	textComponent->SetWorldLocation(location);
+	textComponent->SetRelativeLocation(location);
 
 	UMaterialInterface* MaterialInterface = textComponent->FrontMaterial;
 	UMaterialInstanceDynamic* Material = UMaterialInstanceDynamic::Create(MaterialInterface, nullptr);
@@ -47,6 +47,11 @@ UText3DComponent* ABlackboardActor::BePointedAt(FHitResult HitResult) {
 	UText3DComponent* ClosestTextComponent = nullptr;
 
 	UBoxComponent* box = this->FindComponentByClass<UBoxComponent>();
+	
+	if (box == nullptr) {
+		return nullptr;
+	}
+
 	FVector boxExtent = box->Bounds.BoxExtent;
 	float lineHeight = boxExtent.Z / 3.0f;
 	lineHeight += 10.0f; // TODO: figure out why the aim is off by about 5.0f
@@ -109,9 +114,12 @@ void ABlackboardActor::SetQuestion(int index) {
 	this->Clear();
 
 	// set max width to width of collision box
-	UBoxComponent* box = this->FindComponentByClass<UBoxComponent>();
-	FBoxSphereBounds localBounds = box->CalcLocalBounds();
-	FVector localBoxExtent = localBounds.BoxExtent;
+	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
+	FVector localBoxExtent = board->CalcLocalBounds().BoxExtent;
+	
+	float margin = 10.0f;
+	localBoxExtent.X -= margin;
+	localBoxExtent.Z -= margin;
 
 	UText3DComponent* templateComponent = this->FindComponentByClass<UText3DComponent>();
 	float textScaleX = templateComponent->GetRelativeScale3D().X;
@@ -119,27 +127,28 @@ void ABlackboardActor::SetQuestion(int index) {
 	float maxWidth = localBoxExtent.X * 2.0f * (1.0f / textScaleX);
 	templateComponent->SetMaxWidth(maxWidth);
 
+	float lineHeight = localBoxExtent.Z / 3.0f;
+
 	// move to corner
-	FVector boxExtent = box->Bounds.BoxExtent;
-	FVector location = box->GetComponentLocation();
-	location.X -= 2.001f;
-	location.Y -= boxExtent.Y; // just enough so it doesn't Z-fight the chalkboard
-	location.Z += boxExtent.Z;
-	templateComponent->SetWorldLocation(location);
+	FVector location = board->GetRelativeLocation();
+	
+	location.X -= localBoxExtent.X;//localBounds.GetBox().GetSize().GetMax();
+	location.Y += 2.01f; // just enough so it doesn't Z-fight the chalkboard
+	location.Z = localBoxExtent.Z * 2.0f + lineHeight;
+
+	templateComponent->SetRelativeLocation(location);
 	
 	// position strings
 	TArray<FName> RowNames = this->DataTable->GetRowNames();
 	FQuestion* question = this->DataTable->FindRow<FQuestion>(RowNames[index], TEXT("Blackboard"));
 
-	float lineHeight = boxExtent.Z / 3.0f;
-
 	//this->AddLine(templateComponent, question->Instructions, location, lineHeight);
 	this->AddLine(templateComponent, question->Sentence, location, lineHeight * 1.5f);
 
-	TArray<FString> answers = question->WrongAnswers;
+	TArray<FString> answers = question->Answers;
 
 	int rightAnswerIndex = FCString::Atoi(*question->RightAnswer) - 1;
-	FString rightAnswer = question->WrongAnswers[rightAnswerIndex];
+	FString rightAnswer = question->Answers[rightAnswerIndex];
 
 	// shuffle answers
 	for (int i = answers.Num() - 1; i > 0; i--) {

@@ -22,5 +22,5 @@ struct FQuestion: public FTableRowBase
     FString RightAnswer;
 
     UPROPERTY(EditAnywhere)
-    TArray<FString> WrongAnswers;
+    TArray<FString> Answers;
 };
