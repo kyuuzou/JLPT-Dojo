@@ -4,92 +4,71 @@
 #include "BlackboardActor.h"
 
 #include "Components/BoxComponent.h"
-#include "Engine/DataTable.h"
-#include "FQuestion.h"
+#include "DojoGameState.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Text3DComponent.h"
 
 ABlackboardActor::ABlackboardActor() {
 	PrimaryActorTick.bCanEverTick = true;
-	this->handlingAnswer = false;
-}
-
-UText3DComponent* ABlackboardActor::AddLine(
-	UText3DComponent* templateComponent, FString line, OUT FVector& location, float lineHeight
-) {
-	UActorComponent* actorComponent = this->CreateComponentFromTemplate(templateComponent);
-	UText3DComponent* textComponent = Cast<UText3DComponent>(actorComponent);
-	textComponent->RegisterComponent();
-	this->AddInstanceComponent(textComponent);
-	this->TextComponents.Add(textComponent);
-
-	textComponent->SetText(FText::FromString(line));
-	textComponent->SetRelativeLocation(location);
-
-	UMaterialInterface* MaterialInterface = textComponent->FrontMaterial;
-	UMaterialInstanceDynamic* Material = UMaterialInstanceDynamic::Create(MaterialInterface, nullptr);
-	textComponent->SetFrontMaterial(Material);
-
-	location.Z -= lineHeight;
-
-	return textComponent;
 }
 
 void ABlackboardActor::BeginPlay() {
 	Super::BeginPlay();
 
-	FGenericPlatformMath::SRandInit(time(0));
-	this->SetRandomQuestion();
+	UText3DComponent* textComponent = this->FindComponentByClass<UText3DComponent>();
+	UMaterialInterface* MaterialInterface = textComponent->FrontMaterial;
+	UMaterialInstanceDynamic* Material = UMaterialInstanceDynamic::Create(MaterialInterface, nullptr);
+	textComponent->SetFrontMaterial(Material);
 }
 
-UText3DComponent* ABlackboardActor::BePointedAt(FHitResult HitResult) {
-	float MinDistance = FLT_MAX;
-	UText3DComponent* ClosestTextComponent = nullptr;
+void ABlackboardActor::BePointedAt(FHitResult HitResult) {
 
-	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
-	
-	FVector boxExtent = board->Bounds.BoxExtent;
-	float lineHeight = boxExtent.Z / 3.0f;
-	lineHeight += 10.0f; // TODO: figure out why the aim is off by about 5.0f
-
-	for (UText3DComponent* TextComponent : this->AnswerTextComponents) {
-		FVector Location = TextComponent->GetComponentLocation();
-		Location.Z -= (lineHeight * 0.5f);
-
-		float Distance = FVector::Dist(HitResult.ImpactPoint, Location);
-		float DistanceFromRow = abs(Location.Z - HitResult.ImpactPoint.Z);
-
-		if (Distance < MinDistance /* && DistanceFromRow < lineHeight*/) {
-			if (!handlingAnswer) {
-				ABlackboardActor::SetColor(ClosestTextComponent, FLinearColor::White);
-				ABlackboardActor::SetColor(TextComponent, FLinearColor::Yellow);
-			}
-
-			ClosestTextComponent = TextComponent;
-			MinDistance = Distance;
-		} else {
-			if (!handlingAnswer) {
-				ABlackboardActor::SetColor(TextComponent, FLinearColor::White);
-			}
-		}
-	}
-
-	return ClosestTextComponent;
 }
 
 void ABlackboardActor::Clear() {
-	for (UText3DComponent* textComponent : this->TextComponents) {
-		textComponent->UnregisterComponent();
-		this->RemoveInstanceComponent(textComponent);
-	}
-
-	this->TextComponents.Empty();
-	this->AnswerTextComponents.Empty();
-	this->RightAnswerComponent = nullptr;
+	this->SetColor(FLinearColor::White);
 }
 
-void ABlackboardActor::SetColor(UText3DComponent* TextComponent, FLinearColor Color) {
+void ABlackboardActor::OnCorrectAnswer() {
+	this->SetColor(FLinearColor::Green);
+}
+
+void ABlackboardActor::OnWrongAnswer() {
+	this->SetColor(FLinearColor::Red);
+}
+
+void ABlackboardActor::SetCaption(FString caption) {
+	this->Clear();
+
+	// set max width to width of collision box
+	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
+	FVector localBoxExtent = board->CalcLocalBounds().BoxExtent;
+
+	float margin = 10.0f;
+	localBoxExtent.X -= margin;
+	localBoxExtent.Z -= margin;
+
+	UText3DComponent* textComponent = this->FindComponentByClass<UText3DComponent>();
+	float textScaleX = textComponent->GetRelativeScale3D().X;
+
+	float maxWidth = localBoxExtent.X * 2.0f * (1.0f / textScaleX);
+	textComponent->SetMaxWidth(maxWidth);
+
+	float lineHeight = localBoxExtent.Z / 3.0f;
+
+	// move to center
+	FVector textLocation = textComponent->GetRelativeLocation();
+	textLocation.Z = localBoxExtent.Z + lineHeight;
+	textComponent->SetRelativeLocation(textLocation);
+
+	textComponent->SetText(FText::FromString(caption));
+}
+
+void ABlackboardActor::SetColor(FLinearColor Color) {
+	UText3DComponent* TextComponent = this->FindComponentByClass<UText3DComponent>();
+
 	if (TextComponent == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("Could not find Text3DComponent."));
 		return;
 	}
 
@@ -99,119 +78,13 @@ void ABlackboardActor::SetColor(UText3DComponent* TextComponent, FLinearColor Co
 	DynamicMaterial->SetVectorParameterValue(TEXT("Color"), Color);
 }
 
-void ABlackboardActor::SetRandomQuestion() {
-	TArray<FName> RowNames = this->DataTable->GetRowNames();
-	int index = FMath::FRandRange(0, RowNames.Num());
-
-	this->SetQuestion(index);
-}
-
-void ABlackboardActor::SetQuestion(int index) {
-	this->Clear();
-
-	// set max width to width of collision box
-	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
-	FVector localBoxExtent = board->CalcLocalBounds().BoxExtent;
-	
-	float margin = 10.0f;
-	localBoxExtent.X -= margin;
-	localBoxExtent.Z -= margin;
-
-	UText3DComponent* templateComponent = this->FindComponentByClass<UText3DComponent>();
-	float textScaleX = templateComponent->GetRelativeScale3D().X;
-
-	float maxWidth = localBoxExtent.X * 2.0f * (1.0f / textScaleX);
-	templateComponent->SetMaxWidth(maxWidth);
-
-	float lineHeight = localBoxExtent.Z / 3.0f;
-
-	// move to corner
-	FVector location = board->GetRelativeLocation();
-	
-	location.X -= localBoxExtent.X;
-	location.Y += 2.01f; // just enough so it doesn't Z-fight the chalkboard
-	location.Z = localBoxExtent.Z * 2.0f + lineHeight;
-
-	templateComponent->SetRelativeLocation(location);
-	
-	// position strings
-	TArray<FName> RowNames = this->DataTable->GetRowNames();
-	FQuestion* question = this->DataTable->FindRow<FQuestion>(RowNames[index], TEXT("Blackboard"));
-
-	//this->AddLine(templateComponent, question->Instructions, location, lineHeight);
-	this->AddLine(templateComponent, question->Sentence, location, lineHeight * 1.5f);
-
-	TArray<FString> answers = question->Answers;
-
-	int rightAnswerIndex = FCString::Atoi(*question->RightAnswer) - 1;
-	FString rightAnswer = question->Answers[rightAnswerIndex];
-
-	// shuffle answers
-	for (int i = answers.Num() - 1; i > 0; i--) {
-		int j = FMath::FloorToInt(FMath::SRand() * (i + 1)) % answers.Num();
-		FString temp = answers[i];
-		answers[i] = answers[j];
-		answers[j] = temp;
-	}
-
-	for (int i = 0; i < answers.Num(); i++) {
-		bool isRightAnswer = answers[i] == rightAnswer;
-
-		FString answer = FString::Printf(TEXT("□ %s"), *answers[i]);
-		UText3DComponent* textComponent = this->AddLine(templateComponent, answer, location, lineHeight * 1.25f);
-		this->AnswerTextComponents.Add(textComponent);
-
-		if (isRightAnswer) {
-			this->RightAnswerComponent = textComponent;
-		}
-	}
-
-	templateComponent->SetVisibility(false, true);
-	this->handlingAnswer = false;
-}
-
 float ABlackboardActor::TakeDamage(
 	float DamageAmount,
 	struct FDamageEvent const& DamageEvent,
 	class AController* EventInstigator,
 	AActor* DamageCauser
 ) {
-	if (this->handlingAnswer) {
-		return 0.0f;
-	}
-
-	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID)) {
-		this->handlingAnswer = true;
-
-		const FPointDamageEvent* PointDamageEvent = static_cast<const FPointDamageEvent*>(&DamageEvent);
-		FHitResult HitResult = PointDamageEvent->HitInfo;
-		
-		UText3DComponent* textComponent = this->BePointedAt(HitResult);
-
-		if (textComponent != nullptr) {
-			FString text = textComponent->Text.ToString();
-			textComponent->SetText(FText::FromString(text.Replace(TEXT("□"), TEXT("▣"))));
-
-			if (textComponent == this->RightAnswerComponent) {
-				ABlackboardActor::SetColor(textComponent, FLinearColor::Green);
-			} else {
-				ABlackboardActor::SetColor(textComponent, FLinearColor::Red);
-				ABlackboardActor::SetColor(this->RightAnswerComponent, FLinearColor::Green);
-			}
-
-			FTimerHandle timerHandle;
-			this->GetWorldTimerManager().SetTimer(
-				timerHandle,
-				this,
-				&ABlackboardActor::SetRandomQuestion,
-				3.0f
-			);
-		} else {
-			this->handlingAnswer = false;
-		}
-	} else {
-		UE_LOG(LogTemp, Error, TEXT("ABlackboardActor::TakeDamage: Unexpected type of damage!"));
-	}
+	this->OnBlackboardHit.Broadcast(this);
 
 	return 0.0f;
 }
