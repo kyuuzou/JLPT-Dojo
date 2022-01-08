@@ -56,9 +56,11 @@ void ADojoGameMode::InitializeBoards() {
 }
 
 void ADojoGameMode::OnBlackboardHit(ABlackboardActor* blackboard) {
-	if (blackboard == this->GameState->TopBlackboard) {
+	if (this->HandlingAnswer || blackboard == this->GameState->TopBlackboard) {
 		return;
 	}
+
+	this->HandlingAnswer = true;
 
 	bool correct = blackboard == this->RightAnswerBoard;
 
