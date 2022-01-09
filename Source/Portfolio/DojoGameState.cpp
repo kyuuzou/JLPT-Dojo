@@ -3,3 +3,6 @@
 
 #include "DojoGameState.h"
 
+void ADojoGameState::TriggerOnProgressChanged() {
+	this->OnProgressChanged.Broadcast(this->Progress);
+}

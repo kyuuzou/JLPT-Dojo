@@ -66,10 +66,18 @@ void ADojoGameMode::OnBlackboardHit(ABlackboardActor* blackboard) {
 
 	if (correct) {
 		blackboard->OnCorrectAnswer();
+
+		this->GameState->Progress++;
+		this->GameState->RightAnswers++;
 	} else {
 		blackboard->OnWrongAnswer();
 		this->RightAnswerBoard->OnCorrectAnswer();
+
+		this->GameState->Progress--;
+		this->GameState->WrongAnswers++;
 	}
+
+	this->GameState->TriggerOnProgressChanged();
 
 	FTimerHandle timerHandle;
 	this->GetWorldTimerManager().SetTimer(

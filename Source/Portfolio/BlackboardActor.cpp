@@ -40,6 +40,10 @@ void ABlackboardActor::OnWrongAnswer() {
 void ABlackboardActor::SetCaption(FString caption) {
 	this->Clear();
 
+	for (int i = 15; i < caption.Len(); i += 15) {
+		caption.InsertAt(i, "\n");
+	}
+
 	// set max width to width of collision box
 	UStaticMeshComponent* board = this->FindComponentByClass<UStaticMeshComponent>();
 	FVector localBoxExtent = board->CalcLocalBounds().BoxExtent;
@@ -53,7 +57,7 @@ void ABlackboardActor::SetCaption(FString caption) {
 
 	float maxWidth = localBoxExtent.X * 2.0f * (1.0f / textScaleX);
 	textComponent->SetMaxWidth(maxWidth);
-
+	
 	float lineHeight = localBoxExtent.Z / 3.0f;
 
 	// move to center

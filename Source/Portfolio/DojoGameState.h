@@ -6,6 +6,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "DojoGameState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProgressChanged, int, progress);
+
 /**
  * 
  */
@@ -22,5 +24,23 @@ public:
 	TArray<class ABlackboardActor*> Blackboards;
 
 	UPROPERTY(VisibleAnywhere)
+	int JLPTLevel;
+
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers")
+	FOnProgressChanged OnProgressChanged;
+
+	UPROPERTY(VisibleAnywhere)
+	int Progress;
+
+	UPROPERTY(VisibleAnywhere)
+	int RightAnswers;
+
+	UPROPERTY(VisibleAnywhere)
 	ABlackboardActor* TopBlackboard;
+
+	UPROPERTY(VisibleAnywhere)
+	int WrongAnswers;
+
+	UFUNCTION()
+	void TriggerOnProgressChanged();
 };

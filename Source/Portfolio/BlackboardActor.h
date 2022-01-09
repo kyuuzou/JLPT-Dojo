@@ -13,7 +13,7 @@ class PORTFOLIO_API ABlackboardActor : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers")
 	FOnBlackboardHit OnBlackboardHit;
 	
