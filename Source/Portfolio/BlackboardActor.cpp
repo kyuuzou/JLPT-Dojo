@@ -79,6 +79,11 @@ void ABlackboardActor::SetColor(FLinearColor Color) {
 	UMaterialInterface* Material = TextComponent->FrontMaterial;
 	UMaterialInstanceDynamic* DynamicMaterial = Cast<UMaterialInstanceDynamic>(Material);
 
+	if (DynamicMaterial == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("Could not cast to DynamicMaterial."));
+		return;
+	}
+
 	DynamicMaterial->SetVectorParameterValue(TEXT("Color"), Color);
 }
 

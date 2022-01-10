@@ -27,36 +27,27 @@ void ADojoGameMode::Clear() {
 }
 
 void ADojoGameMode::InitializeBoards() {
-	ABlackboardActor* topBlackboard = nullptr;
-	float maxHeight = FLT_MIN;
 	const FName ignoreTag("Ignore");
+	const FName questionTag("Question");
 
 	for (TActorIterator<ABlackboardActor> blackboardIterator(this->GetWorld()); blackboardIterator; ++blackboardIterator) {
-		if (!blackboardIterator->ActorHasTag(ignoreTag)) {
-			this->GameState->Blackboards.Add(*blackboardIterator);
-
-			float height = blackboardIterator->GetActorLocation().Z;
-
-			if (height > maxHeight) {
-				topBlackboard = *blackboardIterator;
-				maxHeight = height;
-			}
-		}
-	}
-	
-	for (ABlackboardActor* blackboard : this->GameState->Blackboards) {
-		if (blackboard != topBlackboard) {
-			this->GameState->AnswerBlackboards.Add(blackboard);
+		if (blackboardIterator->ActorHasTag(ignoreTag)) {
+			continue;
 		}
 
-		blackboard->OnBlackboardHit.AddDynamic(this, &ADojoGameMode::OnBlackboardHit);
-	}
+		if (blackboardIterator->ActorHasTag(questionTag)) {
+			this->GameState->QuestionBlackboard = *blackboardIterator;
+		} else {
+			this->GameState->AnswerBlackboards.Add(*blackboardIterator);
+			blackboardIterator->OnBlackboardHit.AddDynamic(this, &ADojoGameMode::OnBlackboardHit);
+		}
 
-	this->GameState->TopBlackboard = topBlackboard;
+		this->GameState->Blackboards.Add(*blackboardIterator);
+	}
 }
 
 void ADojoGameMode::OnBlackboardHit(ABlackboardActor* blackboard) {
-	if (this->HandlingAnswer || blackboard == this->GameState->TopBlackboard) {
+	if (this->HandlingAnswer || blackboard == this->GameState->QuestionBlackboard) {
 		return;
 	}
 
@@ -89,6 +80,10 @@ void ADojoGameMode::OnBlackboardHit(ABlackboardActor* blackboard) {
 }
 
 void ADojoGameMode::SetRandomQuestion() {
+	if (this->GameState->Progress < -3) {
+		this->GameState->Reset();
+	}
+
 	TArray<FName> RowNames = this->DataTable->GetRowNames();
 	int index = FMath::FRandRange(0, RowNames.Num());
 
@@ -115,7 +110,7 @@ void ADojoGameMode::SetQuestion(int index) {
 		answers[j] = temp;
 	}
 
-	this->GameState->TopBlackboard->SetCaption(question->Sentence);
+	this->GameState->QuestionBlackboard->SetCaption(question->Sentence);
 
 	for (int i = 0; i < answers.Num(); i++) {
 		bool isRightAnswer = answers[i] == rightAnswer;

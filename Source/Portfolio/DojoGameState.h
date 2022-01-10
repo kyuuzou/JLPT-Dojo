@@ -36,10 +36,12 @@ public:
 	int RightAnswers;
 
 	UPROPERTY(VisibleAnywhere)
-	ABlackboardActor* TopBlackboard;
+	ABlackboardActor* QuestionBlackboard;
 
 	UPROPERTY(VisibleAnywhere)
 	int WrongAnswers;
+
+	virtual void Reset() override;
 
 	UFUNCTION()
 	void TriggerOnProgressChanged();
