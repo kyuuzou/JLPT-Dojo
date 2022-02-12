@@ -1,0 +1,6 @@
+[submodule "JLPT-Dojo-Private"]
+	path = JLPT-Dojo-Private
+	url = https://github.com/kyuuzou/JLPT-Dojo-Private.git
+[submodule "Content/Private"]
+	path = Content/Private
+	url = https://github.com/kyuuzou/JLPT-Dojo-Private.git
