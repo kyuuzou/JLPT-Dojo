@@ -10,6 +10,7 @@
 
 ABlackboardActor::ABlackboardActor() {
 	PrimaryActorTick.bCanEverTick = true;
+	this->Enabled = true;
 }
 
 void ABlackboardActor::BeginPlay() {
@@ -19,6 +20,8 @@ void ABlackboardActor::BeginPlay() {
 	UMaterialInterface* MaterialInterface = textComponent->FrontMaterial;
 	UMaterialInstanceDynamic* Material = UMaterialInstanceDynamic::Create(MaterialInterface, nullptr);
 	textComponent->SetFrontMaterial(Material);
+
+	this->Disable();
 }
 
 void ABlackboardActor::BePointedAt(FHitResult HitResult) {
@@ -26,7 +29,15 @@ void ABlackboardActor::BePointedAt(FHitResult HitResult) {
 }
 
 void ABlackboardActor::Clear() {
-	this->SetColor(FLinearColor::White);
+
+}
+
+void ABlackboardActor::Disable() {
+	this->Enabled = false;
+}
+
+void ABlackboardActor::Enable() {
+	this->Enabled = true;
 }
 
 void ABlackboardActor::OnCorrectAnswer() {
@@ -37,11 +48,36 @@ void ABlackboardActor::OnWrongAnswer() {
 	this->SetColor(FLinearColor::Red);
 }
 
-void ABlackboardActor::SetCaption(FString caption) {
+void ABlackboardActor::SetCaption(FString Caption) {
 	this->Clear();
 
-	for (int i = 15; i < caption.Len(); i += 15) {
-		caption.InsertAt(i, "\n");
+	int LastLineBreak = 0;
+	int CharactersPerLine = 20;
+
+	TArray<int> LineBreaks;
+	
+	for (int i = 0; i < Caption.Len(); i ++) {
+		if (Caption[i] == '\n') {
+			LastLineBreak = 0;
+		}
+
+		// 7 = length of [...] + 1 for the zero-based array + 1
+		if ((LastLineBreak++ > CharactersPerLine) || (Caption[i] == '[' && i >= CharactersPerLine - 7)) {
+			LastLineBreak = 0;
+			LineBreaks.Add(i);
+		}
+	}
+
+	int MinimumCharactersBetweenLineBreaks = 2;
+	LastLineBreak = INT_MAX;
+
+	for (int i = LineBreaks.Num() - 1; i >= 0; i--) {
+		if (LastLineBreak - LineBreaks[i] <= MinimumCharactersBetweenLineBreaks) {
+			continue;
+		}
+
+		LastLineBreak = LineBreaks[i];
+		Caption.InsertAt(LineBreaks[i], "\n");
 	}
 
 	// set max width to width of collision box
@@ -65,7 +101,7 @@ void ABlackboardActor::SetCaption(FString caption) {
 	textLocation.Z = localBoxExtent.Z + lineHeight;
 	textComponent->SetRelativeLocation(textLocation);
 
-	textComponent->SetText(FText::FromString(caption));
+	textComponent->SetText(FText::FromString(Caption));
 }
 
 void ABlackboardActor::SetColor(FLinearColor Color) {
@@ -87,21 +123,9 @@ void ABlackboardActor::SetColor(FLinearColor Color) {
 	DynamicMaterial->SetVectorParameterValue(TEXT("Color"), Color);
 }
 
-float ABlackboardActor::TakeDamage(
-	float DamageAmount,
-	struct FDamageEvent const& DamageEvent,
-	class AController* EventInstigator,
-	AActor* DamageCauser
-) {
-	this->OnBlackboardHit.Broadcast(this);
-
-	return 0.0f;
-}
-
-// Called every frame
-void ABlackboardActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+void ABlackboardActor::SetTextSize(FVector Size) {
+	UText3DComponent* TextComponent = this->FindComponentByClass<UText3DComponent>();
+	USceneComponent* TextRoot = static_cast<USceneComponent*>(TextComponent->GetDefaultSubobjectByName(TEXT("TextRoot")));
+	TextRoot->SetRelativeScale3D(Size);
 }
 

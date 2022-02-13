@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBlackboardHit, ABlackboardActor*, Board);
 
-UCLASS()
+UCLASS(Abstract)
 class PORTFOLIO_API ABlackboardActor : public AActor
 {
 	GENERATED_BODY()
@@ -19,10 +19,13 @@ public:
 	
 	ABlackboardActor();
 	void BePointedAt(FHitResult HitResult);
+	virtual void Disable();
+	virtual void Enable();
 	void OnCorrectAnswer();
 	void OnWrongAnswer();
 	void SetCaption(FString caption);
-	virtual void Tick(float DeltaTime) override;
+	void SetColor(FLinearColor Color);
+	void SetTextSize(FVector Size);
 
 protected:
 	virtual void BeginPlay() override;
@@ -31,9 +34,10 @@ protected:
 		struct FDamageEvent const& DamageEvent,
 		class AController* EventInstigator,
 		AActor* DamageCauser
-	) override;
+	) override PURE_VIRTUAL(ABlackboardActor::BeginPlay, return 0.0f;);
+
+	bool Enabled;
 
 private:
 	void Clear();
-	void SetColor(FLinearColor Color);
 };
