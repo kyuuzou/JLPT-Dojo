@@ -116,7 +116,7 @@ void AGun::PullTrigger(bool makeNoise)
 	FVector ShotDirection;
 
 	if (this->GunTrace(HitResult, ShotDirection)) {
-		//DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
+        DrawDebugPoint(this->GetWorld(), HitResult.Location, 20.0f, FColor::Red, true);
 
 		// pulling it a bit back, so it doesn't spawn inside the target
 		//FVector ShotLocation = HitResult.Location - rotation.Vector() * 10.0f;
