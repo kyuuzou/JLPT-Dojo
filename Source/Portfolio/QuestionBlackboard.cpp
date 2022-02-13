@@ -42,7 +42,7 @@ void AQuestionBlackboard::DetermineIdealTextSize() {
 		}
 	}
 
-	this->SetCaption(FString::Printf(TEXT("%s\n\n«shoot to continue»"), *MaxLengthQuestion->Sentence));
+	this->SetCaption(FString::Printf(TEXT("%s\n\n<shoot to continue>"), *MaxLengthQuestion->Sentence));
 
 	UText3DComponent* TextComponent = this->FindComponentByClass<UText3DComponent>();
 	USceneComponent* TextRoot = static_cast<USceneComponent*>(TextComponent->GetDefaultSubobjectByName(TEXT("TextRoot")));
@@ -58,7 +58,7 @@ void AQuestionBlackboard::Disable() {
 
 	this->ProgressMeter->Disable();
 	this->GetWorldTimerManager().ClearAllTimersForObject(this);
-	this->SetCaption(TEXT("JLPT N5\n\n«shoot to start»"));
+	this->SetCaption(TEXT("JLPT N5\n\n<shoot to start>"));
 }
 
 void AQuestionBlackboard::Enable() {
@@ -98,7 +98,7 @@ void AQuestionBlackboard::OnChosenAnswer(AAnswerBlackboardActor* ChosenBoard) {
 	}
 
 	this->SetFilledCaption(
-		FString::Printf(TEXT("%s\n\n«shoot to continue»"), *this->CurrentQuestion->Sentence),
+		FString::Printf(TEXT("%s\n\n<shoot to continue>"), *this->CurrentQuestion->Sentence),
 		*FString::Printf(TEXT("[%s]"), *this->RightAnswer)
 	);
 	this->SetTextSize(this->IdealTextSize);
@@ -154,7 +154,7 @@ void AQuestionBlackboard::SetQuestion(int Index) {
 
 	this->SetColor(FLinearColor::White);
 	this->SetFilledCaption(
-		FString::Printf(TEXT("%s\n\n«shoot to pass»"), *Question->Sentence),
+		FString::Printf(TEXT("%s\n\n<shoot to pass>"), *Question->Sentence),
 		TEXT("[...]")
 	);
 
