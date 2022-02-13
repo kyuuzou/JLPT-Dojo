@@ -16,24 +16,4 @@ class PORTFOLIO_API ADojoGameMode : public AGameModeBase
 
 protected:
 	virtual void BeginPlay() override;
-
-private:
-	UPROPERTY(EditAnywhere)
-	class UDataTable* DataTable;
-
-	class ADojoGameState* GameState;
-	bool HandlingAnswer;
-
-	UPROPERTY(VisibleAnywhere)
-	class ABlackboardActor* RightAnswerBoard;
-
-	ADojoGameMode();
-	void Clear();
-	void InitializeBoards();
-
-	UFUNCTION()
-	void OnBlackboardHit(class ABlackboardActor* blackboard);
-
-	void SetRandomQuestion();
-	void SetQuestion(int index);
 };
