@@ -7,7 +7,7 @@
 #include "TextToSpeech.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class JLPTDOJO_API UTextToSpeech : public UActorComponent
 {
 	GENERATED_BODY()
@@ -15,6 +15,9 @@ class JLPTDOJO_API UTextToSpeech : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTextToSpeech();
+
+	UFUNCTION(BlueprintCallable)
+	void PlaySound();
 
 protected:
 	// Called when the game starts

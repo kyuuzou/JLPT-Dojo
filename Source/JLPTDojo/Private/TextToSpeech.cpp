@@ -23,6 +23,9 @@ void UTextToSpeech::BeginPlay()
 	
 }
 
+void UTextToSpeech::PlaySound() {
+
+}
 
 // Called every frame
 void UTextToSpeech::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
