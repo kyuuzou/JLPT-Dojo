@@ -2,7 +2,7 @@
 
 #include "DojoGameMode.h"
 
-#include "AnswerBoardActor.h"
+#include "AnswerBoard.h"
 #include "Delegates/Delegate.h"
 #include "DojoGameState.h"
 #include "Engine/DataTable.h"
@@ -23,7 +23,7 @@ FVocabularyTableRow* ADojoGameMode::GetTableRow(FName RowName) {
 void ADojoGameMode::InitialiseActors() {
 	UGameplayStaticsExtended::GetAllActorsOfSubclass(this->GetWorld(), this->AnswerBoards);
 
-	for (AAnswerBoardActor* answerBoard : this->AnswerBoards) {
+	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
 		answerBoard->OnActorBeginOverlap.AddUniqueDynamic(this, &ADojoGameMode::OnAnswerBoardBeginOverlap);
 	}
 
@@ -56,7 +56,7 @@ void ADojoGameMode::InitialiseState() {
 }
 
 void ADojoGameMode::OnAnswerBoardBeginOverlap(AActor* OverlappedActor, AActor* OtherActor) {
-	AAnswerBoardActor* AnswerBoard = Cast<AAnswerBoardActor>(OverlappedActor);
+	AAnswerBoard* AnswerBoard = Cast<AAnswerBoard>(OverlappedActor);
 	int answerIndex = AnswerBoard->GetCurrentIndex();
 	FVocabularyTableRow* row = this->GetTableRow(answerIndex);
 
@@ -91,7 +91,7 @@ void ADojoGameMode::SetRandomQuestion() {
 	FVocabularyTableRow* row = this->GetTableRow(rightAnswerIndex);
 	this->QuestionBoard->SetCaption(FText::FromString(row->Word));
 
-	for (AAnswerBoardActor* answerBoard : this->AnswerBoards) {
+	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
 		// TODO: redo this so there's no possibility of repeated indexes
 		int wrongIndex = FMath::FRandRange(0.0f, this->FilteredRowNames.Num() - 1);
 
@@ -107,7 +107,7 @@ void ADojoGameMode::SetRandomQuestion() {
 	this->AnswerBoards[rightAnswerBoardIndex]->SetRightAnswer(row->Reading, rightAnswerIndex);
 	this->RightAnswerBoard = this->AnswerBoards[rightAnswerBoardIndex];
 
-	for (AAnswerBoardActor* answerBoard : this->AnswerBoards) {
+	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
 		answerBoard->ResetGeometry();
 	}
 

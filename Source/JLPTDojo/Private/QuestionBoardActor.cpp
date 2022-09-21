@@ -2,9 +2,6 @@
 
 #include "QuestionBoardActor.h"
 
-#include "AnswerBoardActor.h"
-#include "Engine/DataTable.h"
-#include "FVocabularyTableRow.h"
 #include "Text3DComponent.h"
 
 void AQuestionBoardActor::PostInitializeComponents() {

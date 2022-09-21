@@ -1,20 +1,17 @@
 // Copyright (c) 2021 Nelson Rodrigues
 
-#include "AnswerBoardActor.h"
-#include "Engine/DataTable.h"
-#include "FVocabularyTableRow.h"
-#include "ProjectileActor.h"
+#include "AnswerBoard.h"
 #include "Text3DComponent.h"
 
-int AAnswerBoardActor::GetCurrentIndex() {
+int AAnswerBoard::GetCurrentIndex() {
 	return this->currentIndex;
 }
 
-void AAnswerBoardActor::SetCorrect(bool correct) {
+void AAnswerBoard::SetCorrect(bool correct) {
 	this->MeshComponent->SetMaterial(0, correct ? this->RightMaterial : this->WrongMaterial);
 }
 
-void AAnswerBoardActor::PostInitializeComponents() {
+void AAnswerBoard::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 
 	this->MeshComponent = this->FindComponentByClass<UStaticMeshComponent>();
@@ -25,7 +22,7 @@ void AAnswerBoardActor::PostInitializeComponents() {
 	this->DefaultRotation = this->GetActorRotation();
 }
 
-void AAnswerBoardActor::ResetGeometry() {
+void AAnswerBoard::ResetGeometry() {
 	this->SetActorLocation(this->DefaultLocation);
 	this->SetActorRotation(this->DefaultRotation);
 
@@ -34,14 +31,14 @@ void AAnswerBoardActor::ResetGeometry() {
 	this->MeshComponent->SetSimulatePhysics(true);
 }
 
-void AAnswerBoardActor::SetRightAnswer(FString Answer, int Index) {
+void AAnswerBoard::SetRightAnswer(FString Answer, int Index) {
 	this->IsRightAnswer = true;
 
 	this->TextComponent->SetText(FText::FromString(Answer));
 	this->currentIndex = Index;
 }
 
-void AAnswerBoardActor::SetRandomWrongAnswer(FString Answer, int Index) {
+void AAnswerBoard::SetRandomWrongAnswer(FString Answer, int Index) {
 	this->IsRightAnswer = false;
 
 	this->TextComponent->SetText(FText::FromString(Answer));

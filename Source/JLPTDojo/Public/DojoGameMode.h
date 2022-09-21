@@ -17,14 +17,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	class UDataTable* DataTable;
 
-	TArray<class AAnswerBoardActor*> AnswerBoards;
+	TArray<class AAnswerBoard*> AnswerBoards;
 	class ADojoGameState* DojoGameState;
 	TArray<FName> FilteredRowNames;
 	bool HandlingAnswer;
 	class AMeaningBoard* MeaningBoard;
 	AActor* NextButton;
 	class AQuestionBoardActor* QuestionBoard;
-	class AAnswerBoardActor* RightAnswerBoard;
+	class AAnswerBoard* RightAnswerBoard;
 
 	struct FVocabularyTableRow* GetTableRow(int Index);
 	struct FVocabularyTableRow* GetTableRow(FName RowName);
