@@ -41,10 +41,10 @@ void AMeaningBoard::SetCaption(FString Caption) {
 	}
 
 	// TODO: Implement proper scaling so the text is always the same size, and remove this
-	int minimumSize = 40;
+	int minimumSize = 50;
 
 	if (Caption.Len() < minimumSize) {
-		int difference = Caption.Len() - minimumSize;
+		int difference = minimumSize - Caption.Len();
 
 		for (int i = 0; i < difference; i += 2) {
 			Caption.InsertAt(0, ' ');
