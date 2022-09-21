@@ -3,19 +3,19 @@
 #include "DojoGameState.h"
 
 void ADojoGameState::BroadcastScoreChanged() {
-	this->OnScoreChanged.Broadcast(_CurrentStreak, _MaximumStreak, _RightAnswers, _TotalQuestions);
+	this->OnScoreChanged.Broadcast(this->CurrentStreak, this->MaximumStreak, this->RightAnswers, this->TotalQuestions);
 }
 
 int ADojoGameState::GetNextQuestion() {
 	return FMath::FRandRange(0.0f, this->RemainingQuestions.Num());
 }
 
-void ADojoGameState::Initialise(int TotalQuestions) {
-	_TotalQuestions = TotalQuestions;
+void ADojoGameState::Initialise(int TotalQuestions_) {
+	this->TotalQuestions = TotalQuestions_;
 
 	this->RemainingQuestions.Reset();
 
-	for (int i = 0; i < TotalQuestions; i++) {
+	for (int i = 0; i < this->TotalQuestions; i++) {
 		this->RemainingQuestions.Add(i);
 	}
 
@@ -23,11 +23,11 @@ void ADojoGameState::Initialise(int TotalQuestions) {
 }
 
 void ADojoGameState::ProcessCorrectAnswer(int QuestionIndex) {
-	_RightAnswers++;
-	_CurrentStreak++;
+	this->RightAnswers++;
+	this->CurrentStreak++;
 
-	if (_CurrentStreak > _MaximumStreak) {
-		_MaximumStreak++;
+	if (this->CurrentStreak > this->MaximumStreak) {
+		this->MaximumStreak++;
 	}
 
 	this->RemainingQuestions.Remove(QuestionIndex);
@@ -36,6 +36,6 @@ void ADojoGameState::ProcessCorrectAnswer(int QuestionIndex) {
 }
 
 void ADojoGameState::ProcessWrongAnswer() {
-	_CurrentStreak = 0;
+	this->CurrentStreak = 0;
 	this->BroadcastScoreChanged();
 }

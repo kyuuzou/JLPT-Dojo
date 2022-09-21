@@ -17,15 +17,15 @@ public:
 
 	void BroadcastScoreChanged();
 	int GetNextQuestion();
-	void Initialise(int TotalQuestions);
+	void Initialise(int TotalQuestions_);
 	void ProcessCorrectAnswer(int QuestionIndex);
 	void ProcessWrongAnswer();
 
 private:
-	int _CurrentStreak;
-	int _MaximumStreak;
-	int _RightAnswers;
-	int _TotalQuestions;
+	int CurrentStreak;
+	int MaximumStreak;
+	int RightAnswers;
+	int TotalQuestions;
 
 	TArray<int> RemainingQuestions;
 };
