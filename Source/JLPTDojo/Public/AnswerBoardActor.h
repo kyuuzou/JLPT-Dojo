@@ -7,11 +7,10 @@
 #include "AnswerBoardActor.generated.h"
 
 UCLASS()
-class JLPTDOJO_API AAnswerBoardActor : public AActor
-{
+class JLPTDOJO_API AAnswerBoardActor : public AActor {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	int GetCurrentIndex();
 	virtual void PostInitializeComponents() override;
 	void ResetGeometry();
@@ -19,11 +18,8 @@ public:
 	void SetRandomWrongAnswer(FString Answer, int Index);
 	void SetRightAnswer(FString Answer, int Index);
 
-protected:
-	virtual void BeginPlay() override;
-
 private:
-	UPROPERTY(EditAnywhere, Category="Materials")
+	UPROPERTY(EditAnywhere, Category = "Materials")
 	class UMaterialInterface* DefaultMaterial;
 
 	UPROPERTY(EditAnywhere, Category = "Materials")

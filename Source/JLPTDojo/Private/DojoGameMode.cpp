@@ -40,7 +40,7 @@ void ADojoGameMode::InitialiseData() {
 	// Filter all the rows that have the same reading as the question
 	for (FName rowName : rowNames) {
 		FVocabularyTableRow* row = this->GetTableRow(rowName);
-		
+
 		if (row->Word != row->Reading) {
 			this->FilteredRowNames.Add(rowName);
 		}

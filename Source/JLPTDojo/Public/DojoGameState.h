@@ -8,13 +8,10 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FScoreChangedSignature, int, CurrentStreak, int, MaximumStreak, int, RightAnswers, int, TotalQuestions);
 
-/**
- * 
- */
 UCLASS()
 class JLPTDOJO_API ADojoGameState : public AGameStateBase {
 	GENERATED_BODY()
-	
+
 public:
 	FScoreChangedSignature OnScoreChanged;
 

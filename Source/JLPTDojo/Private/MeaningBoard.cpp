@@ -5,14 +5,6 @@
 #include "Internationalization/Regex.h"
 #include "Text3DComponent.h"
 
-AMeaningBoard::AMeaningBoard() {
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AMeaningBoard::BeginPlay() {
-	Super::BeginPlay();
-}
-
 void AMeaningBoard::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 
@@ -26,7 +18,7 @@ void AMeaningBoard::SetCaption(FString Caption) {
 
 	if (myMatcher.FindNext()) {
 		Caption = myMatcher.GetCaptureGroup(0);
-		
+
 		// TODO: revisit the regex, so it also removes the second meaning
 		int secondMeaningIndex = Caption.Find("2. ");
 
@@ -53,9 +45,3 @@ void AMeaningBoard::SetCaption(FString Caption) {
 
 	this->TextComponent->SetText(FText::FromString(Caption));
 }
-
-void AMeaningBoard::Tick(float DeltaTime) {
-	Super::Tick(DeltaTime);
-
-}
-

@@ -9,18 +9,15 @@
 UCLASS()
 class JLPTDOJO_API AScoreBoard : public AActor {
 	GENERATED_BODY()
-	
-public:	
-	AScoreBoard();
-	
+
+public:
 	virtual void PostInitializeComponents() override;
-	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:	
+private:
 	UPROPERTY(EditAnywhere, meta = (MultiLine = "true"))
 	FString TextTemplate;
 

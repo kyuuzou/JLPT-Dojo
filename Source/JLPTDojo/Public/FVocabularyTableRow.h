@@ -7,12 +7,8 @@
 
 #include "FVocabularyTableRow.generated.h"
 
-/**
- * 
- */
 USTRUCT(BlueprintType)
-struct FVocabularyTableRow : public FTableRowBase
-{
+struct FVocabularyTableRow : public FTableRowBase {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)

@@ -6,14 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "DojoGameMode.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class JLPTDOJO_API ADojoGameMode : public AGameModeBase
-{
+class JLPTDOJO_API ADojoGameMode : public AGameModeBase {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void StartPlay() override;
 

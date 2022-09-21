@@ -7,21 +7,13 @@
 #include "QuestionBoardActor.generated.h"
 
 UCLASS()
-class JLPTDOJO_API AQuestionBoardActor : public AActor
-{
+class JLPTDOJO_API AQuestionBoardActor : public AActor {
 	GENERATED_BODY()
-	
-public:
-	AQuestionBoardActor();
 
+public:
 	virtual void PostInitializeComponents() override;
 	void SetCaption(FText Caption);
 	void SetCorrect(bool Correct);
-	virtual void Tick(float DeltaTime) override;
-
-protected:
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Data")

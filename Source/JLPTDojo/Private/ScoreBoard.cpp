@@ -7,10 +7,6 @@
 #include "DojoGameState.h"
 #include "Text3DComponent.h"
 
-AScoreBoard::AScoreBoard() {
-	PrimaryActorTick.bCanEverTick = true;
-}
-
 void AScoreBoard::BeginPlay() {
 	Super::BeginPlay();
 
@@ -33,10 +29,3 @@ void AScoreBoard::PostInitializeComponents() {
 
 	this->TextComponent = this->FindComponentByClass<UText3DComponent>();
 }
-
-void AScoreBoard::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

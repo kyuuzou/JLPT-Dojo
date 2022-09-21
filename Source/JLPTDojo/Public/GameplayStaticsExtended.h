@@ -5,9 +5,6 @@
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
 
-/**
- * 
- */
 class JLPTDOJO_API UGameplayStaticsExtended : UGameplayStatics {
 
 public:

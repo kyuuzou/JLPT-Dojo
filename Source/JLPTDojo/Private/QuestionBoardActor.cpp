@@ -7,21 +7,6 @@
 #include "FVocabularyTableRow.h"
 #include "Text3DComponent.h"
 
-AQuestionBoardActor::AQuestionBoardActor() {
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-void AQuestionBoardActor::BeginPlay() {
-	Super::BeginPlay();
-
-}
-
-void AQuestionBoardActor::EndPlay(const EEndPlayReason::Type EndPlayReason) {
-	Super::EndPlay(EndPlayReason);
-
-}
-
 void AQuestionBoardActor::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 
@@ -37,10 +22,5 @@ void AQuestionBoardActor::SetCaption(FText Caption) {
 
 void AQuestionBoardActor::SetCorrect(bool Correct) {
 	this->MeshComponent->SetMaterial(0, Correct ? this->RightMaterial : this->WrongMaterial);
-}
-
-void AQuestionBoardActor::Tick(float DeltaTime) {
-	Super::Tick(DeltaTime);
-
 }
 

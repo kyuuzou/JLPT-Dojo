@@ -6,12 +6,6 @@
 #include "ProjectileActor.h"
 #include "Text3DComponent.h"
 
-// Called when the game starts or when spawned
-void AAnswerBoardActor::BeginPlay() {
-	Super::BeginPlay();
-
-}
-
 int AAnswerBoardActor::GetCurrentIndex() {
 	return this->currentIndex;
 }

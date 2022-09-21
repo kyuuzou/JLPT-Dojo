@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ProjectileActor.generated.h"
+#include "Blackboard.generated.h"
 
 UCLASS()
-class JLPTDOJO_API AProjectileActor : public AActor
-{
+class JLPTDOJO_API ABlackboard : public AActor {
 	GENERATED_BODY()
+
 };
