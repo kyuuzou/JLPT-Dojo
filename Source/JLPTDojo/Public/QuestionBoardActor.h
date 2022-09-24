@@ -2,32 +2,23 @@
 
 #pragma once
 
+#include "Blackboard.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "QuestionBoardActor.generated.h"
 
 UCLASS()
-class JLPTDOJO_API AQuestionBoardActor : public AActor {
+class JLPTDOJO_API AQuestionBoardActor : public ABlackboard {
 	GENERATED_BODY()
 
 public:
-	virtual void PostInitializeComponents() override;
-	void SetCaption(FText Caption);
-	void SetCorrect(bool Correct);
+	void SetCorrect(bool Correct) const;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Data")
-	class UDataTable* DataTable;
-
-	UPROPERTY(EditAnywhere, Category = "Materials")
-	class UMaterialInterface* DefaultMaterial;
-
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	class UMaterialInterface* RightMaterial;
 
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	class UMaterialInterface* WrongMaterial;
-
-	class UStaticMeshComponent* MeshComponent;
-	class UText3DComponent* TextComponent;
 };

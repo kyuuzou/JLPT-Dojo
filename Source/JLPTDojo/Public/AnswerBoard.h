@@ -3,35 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Blackboard.h"
+
 #include "AnswerBoard.generated.h"
 
 UCLASS()
-class JLPTDOJO_API AAnswerBoard : public AActor {
+class JLPTDOJO_API AAnswerBoard : public ABlackboard {
 	GENERATED_BODY()
 
 public:
-	int GetCurrentIndex();
+	int GetCurrentIndex() const;
 	virtual void PostInitializeComponents() override;
-	void ResetGeometry();
-	void SetCorrect(bool correct);
-	void SetRandomWrongAnswer(FString Answer, int Index);
-	void SetRightAnswer(FString Answer, int Index);
+	void SetCorrect(bool Correct) const;
+	void SetAnswer(FString Answer, int Index, bool IsRightAnswer_);
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Materials")
-	class UMaterialInterface* DefaultMaterial;
-
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	class UMaterialInterface* RightMaterial;
 
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	class UMaterialInterface* WrongMaterial;
 
-	int currentIndex;
-	FVector DefaultLocation;
-	FRotator DefaultRotation;
+	int CurrentIndex;
 	bool IsRightAnswer;
-	class UStaticMeshComponent* MeshComponent;
-	class UText3DComponent* TextComponent;
 };

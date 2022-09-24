@@ -12,19 +12,19 @@
 #include "NextButton.h"
 #include "QuestionBoardActor.h"
 
-FVocabularyTableRow* ADojoGameMode::GetTableRow(int Index) {
+FVocabularyTableRow* ADojoGameMode::GetTableRow(int Index) const {
 	return this->GetTableRow(this->FilteredRowNames[Index]);
 }
 
-FVocabularyTableRow* ADojoGameMode::GetTableRow(FName RowName) {
+FVocabularyTableRow* ADojoGameMode::GetTableRow(FName RowName) const {
 	return this->DataTable->FindRow<FVocabularyTableRow>(RowName, TEXT("Vocabulary Table"));
 }
 
 void ADojoGameMode::InitialiseActors() {
 	UGameplayStaticsExtended::GetAllActorsOfSubclass(this->GetWorld(), this->AnswerBoards);
 
-	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
-		answerBoard->OnActorBeginOverlap.AddUniqueDynamic(this, &ADojoGameMode::OnAnswerBoardBeginOverlap);
+	for (AAnswerBoard* AnswerBoard : this->AnswerBoards) {
+		AnswerBoard->OnActorBeginOverlap.AddUniqueDynamic(this, &ADojoGameMode::OnAnswerBoardBeginOverlap);
 	}
 
 	this->NextButton = UGameplayStatics::GetActorOfClass(this->GetWorld(), ANextButton::StaticClass());
@@ -35,14 +35,14 @@ void ADojoGameMode::InitialiseActors() {
 }
 
 void ADojoGameMode::InitialiseData() {
-	TArray<FName> rowNames = this->DataTable->GetRowNames();
+	TArray<FName> RowNames = this->DataTable->GetRowNames();
 
 	// Filter all the rows that have the same reading as the question
-	for (FName rowName : rowNames) {
-		FVocabularyTableRow* row = this->GetTableRow(rowName);
+	for (FName RowName : RowNames) {
+		FVocabularyTableRow* Row = this->GetTableRow(RowName);
 
-		if (row->Word != row->Reading) {
-			this->FilteredRowNames.Add(rowName);
+		if (Row->Word != Row->Reading) {
+			this->FilteredRowNames.Add(RowName);
 		}
 	}
 }
@@ -57,10 +57,10 @@ void ADojoGameMode::InitialiseState() {
 
 void ADojoGameMode::OnAnswerBoardBeginOverlap(AActor* OverlappedActor, AActor* OtherActor) {
 	AAnswerBoard* AnswerBoard = Cast<AAnswerBoard>(OverlappedActor);
-	int answerIndex = AnswerBoard->GetCurrentIndex();
-	FVocabularyTableRow* row = this->GetTableRow(answerIndex);
+	int AnswerIndex = AnswerBoard->GetCurrentIndex();
+	FVocabularyTableRow* Row = this->GetTableRow(AnswerIndex);
 
-	this->MeaningBoard->SetCaption(row->Meaning);
+	this->MeaningBoard->SetCaption(Row->Meaning);
 
 	if (this->HandlingAnswer) {
 		return;
@@ -74,7 +74,7 @@ void ADojoGameMode::OnAnswerBoardBeginOverlap(AActor* OverlappedActor, AActor* O
 	this->QuestionBoard->SetCorrect(Correct);
 
 	if (Correct) {
-		this->DojoGameState->ProcessCorrectAnswer(answerIndex);
+		this->DojoGameState->ProcessCorrectAnswer(AnswerIndex);
 	} else {
 		this->DojoGameState->ProcessWrongAnswer();
 		AnswerBoard->SetCorrect(false);
@@ -86,29 +86,30 @@ void ADojoGameMode::OnNextButtonHit(AActor* SelfActor, AActor* OtherActor, FVect
 }
 
 void ADojoGameMode::SetRandomQuestion() {
-	int rightAnswerIndex = this->DojoGameState->GetNextQuestion();
+	int RightAnswerIndex = this->DojoGameState->GetNextQuestion();
 
-	FVocabularyTableRow* row = this->GetTableRow(rightAnswerIndex);
-	this->QuestionBoard->SetCaption(FText::FromString(row->Word));
+	FVocabularyTableRow* Row = this->GetTableRow(RightAnswerIndex);
+	this->QuestionBoard->Reset();
+	this->QuestionBoard->SetCaption(FText::FromString(Row->Word));
 
-	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
+	for (AAnswerBoard* AnswerBoard : this->AnswerBoards) {
 		// TODO: redo this so there's no possibility of repeated indexes
-		int wrongIndex = FMath::FRandRange(0.0f, this->FilteredRowNames.Num() - 1);
+		int WrongIndex = FMath::FRandRange(0.0f, this->FilteredRowNames.Num() - 1);
 
-		if (wrongIndex == rightAnswerIndex) {
-			wrongIndex++;
+		if (WrongIndex == RightAnswerIndex) {
+			WrongIndex++;
 		}
 
-		FVocabularyTableRow* wrongRow = this->GetTableRow(wrongIndex);
-		answerBoard->SetRandomWrongAnswer(wrongRow->Reading, wrongIndex);
+		FVocabularyTableRow* WrongRow = this->GetTableRow(WrongIndex);
+		AnswerBoard->SetAnswer(WrongRow->Reading, WrongIndex, false);
 	}
 
-	int rightAnswerBoardIndex = FMath::FRandRange(0.0f, this->AnswerBoards.Num());
-	this->AnswerBoards[rightAnswerBoardIndex]->SetRightAnswer(row->Reading, rightAnswerIndex);
-	this->RightAnswerBoard = this->AnswerBoards[rightAnswerBoardIndex];
+	int RightAnswerBoardIndex = FMath::FRandRange(0.0f, this->AnswerBoards.Num());
+	this->AnswerBoards[RightAnswerBoardIndex]->SetAnswer(Row->Reading, RightAnswerIndex, true);
+	this->RightAnswerBoard = this->AnswerBoards[RightAnswerBoardIndex];
 
-	for (AAnswerBoard* answerBoard : this->AnswerBoards) {
-		answerBoard->ResetGeometry();
+	for (AAnswerBoard* AnswerBoard : this->AnswerBoards) {
+		AnswerBoard->Reset();
 	}
 
 	this->HandlingAnswer = false;

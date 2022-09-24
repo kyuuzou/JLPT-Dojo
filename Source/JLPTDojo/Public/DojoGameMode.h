@@ -26,8 +26,8 @@ private:
 	class AQuestionBoardActor* QuestionBoard;
 	class AAnswerBoard* RightAnswerBoard;
 
-	struct FVocabularyTableRow* GetTableRow(int Index);
-	struct FVocabularyTableRow* GetTableRow(FName RowName);
+	struct FVocabularyTableRow* GetTableRow(int Index) const;
+	struct FVocabularyTableRow* GetTableRow(FName RowName) const;
 	void InitialiseActors();
 	void InitialiseData();
 	void InitialiseState();
