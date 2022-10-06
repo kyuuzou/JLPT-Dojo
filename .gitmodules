@@ -1,0 +1,4 @@
+[submodule "Private"]
+	path = Private
+	url = https://github.com/kyuuzou/JLPT-Dojo-Private.git
+	branch = master
