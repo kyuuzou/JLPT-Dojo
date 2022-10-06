@@ -2,12 +2,12 @@
 
 #include "DojoGameState.h"
 
-void ADojoGameState::BroadcastScoreChanged() {
+void ADojoGameState::BroadcastScoreChanged() const {
 	this->OnScoreChanged.Broadcast(this->CurrentStreak, this->MaximumStreak, this->RightAnswers, this->TotalQuestions);
 }
 
-int ADojoGameState::GetNextQuestion() {
-	return FMath::FRandRange(0.0f, this->RemainingQuestions.Num());
+uint32 ADojoGameState::GetNextQuestion() const {
+	return FMath::RandRange(0, this->RemainingQuestions.Num() - 1);
 }
 
 void ADojoGameState::Initialise(int TotalQuestions_) {

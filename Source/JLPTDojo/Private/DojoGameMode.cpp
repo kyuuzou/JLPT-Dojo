@@ -12,7 +12,62 @@
 #include "NextButton.h"
 #include "QuestionBoardActor.h"
 
+template<typename ... TFString>
+FString ADojoGameMode::DetermineCommonSuffix(TFString... Words) const {
+	const auto WordList = { Words... };
+	const size_t WordCount = WordList.size();
+
+	if (WordCount == 0) {
+		return FString();
+	}
+
+	FString FirstWord = *WordList.begin();
+
+	if (WordCount == 1) {
+		return FirstWord;
+	}
+
+	int SameCharacters = 0;
+	bool Finished = false;
+
+	do {
+		TCHAR CommonCharacter = FirstWord[FirstWord.Len() - SameCharacters - 1];
+
+		for (auto it = WordList.begin() + 1; it != WordList.end(); ++it) {
+			FString Word = *it;
+			int WordLength = Word.Len();
+
+			if (SameCharacters >= WordLength) {
+				Finished = true;
+				break;
+			}
+
+			if (CommonCharacter != Word[WordLength - SameCharacters - 1]) {
+				Finished = true;
+				break;
+			}
+		}
+
+		if (Finished) {
+			break;
+		}
+
+		SameCharacters++;
+	} while (SameCharacters < FirstWord.Len());
+
+	if (SameCharacters == 0) {
+		return FString();
+	}
+
+	return FirstWord.Right(SameCharacters);
+}
+
 FVocabularyTableRow* ADojoGameMode::GetTableRow(int Index) const {
+	if (Index < 0 || Index > this->FilteredRowNames.Num()) {
+		UE_LOG(LogTemp, Error, TEXT("Could not find row on Vocabulary table: %d. Total rows: %d."), Index, this->FilteredRowNames.Num());
+		return nullptr;
+	}
+
 	return this->GetTableRow(this->FilteredRowNames[Index]);
 }
 
@@ -36,13 +91,29 @@ void ADojoGameMode::InitialiseActors() {
 
 void ADojoGameMode::InitialiseData() {
 	TArray<FName> RowNames = this->DataTable->GetRowNames();
+	int FilteredRowsIndex = -1;
 
-	// Filter all the rows that have the same reading as the question
-	for (FName RowName : RowNames) {
+	for (int i = 0; i < RowNames.Num(); i ++) {
+		FName RowName = RowNames[i];
 		FVocabularyTableRow* Row = this->GetTableRow(RowName);
 
-		if (Row->Word != Row->Reading) {
-			this->FilteredRowNames.Add(RowName);
+		// Filter all the rows that have the same reading as the question
+		if (Row->Word == Row->Reading) {
+			continue;
+		}
+
+		this->FilteredRowNames.Add(RowName);
+		FilteredRowsIndex++;
+
+		// Build suffix map
+		FString Suffix = this->DetermineCommonSuffix(Row->Word, Row->Reading);
+
+		if (Suffix.Len() > 0) {
+			if (! this->ReadingsWithSameEnding.Contains(Suffix)){
+				this->ReadingsWithSameEnding.Add(Suffix);
+			}
+
+			this->ReadingsWithSameEnding[Suffix].Add(FilteredRowsIndex);
 		}
 	}
 }
@@ -50,7 +121,6 @@ void ADojoGameMode::InitialiseData() {
 void ADojoGameMode::InitialiseState() {
 	this->DojoGameState = this->GetGameState<ADojoGameState>();
 
-	// TODO: investigate whether it would not be better to have all of this code in GameInstance instead
 	int TotalQuestions = this->FilteredRowNames.Num();
 	this->DojoGameState->Initialise(TotalQuestions);
 }
@@ -100,32 +170,55 @@ void ADojoGameMode::OnNextButtonHit(AActor* SelfActor, AActor* OtherActor, FVect
 }
 
 void ADojoGameMode::SetRandomQuestion() {
-	int RightAnswerIndex = this->DojoGameState->GetNextQuestion();
+	uint32 RightAnswerIndex = this->DojoGameState->GetNextQuestion();
 
-	FVocabularyTableRow* Row = this->GetTableRow(RightAnswerIndex);
+	FVocabularyTableRow* QuestionRow = this->GetTableRow(RightAnswerIndex);
 	this->QuestionBoard->Reset();
-	this->QuestionBoard->SetCaption(FText::FromString(Row->Word));
+	this->QuestionBoard->SetCaption(FText::FromString(QuestionRow->Word));
 
-	for (AAnswerBoard* AnswerBoard : this->AnswerBoards) {
-		// TODO: redo this so there's no possibility of repeated indexes
-		int WrongIndex = FMath::FRandRange(0.0f, this->FilteredRowNames.Num() - 1);
+	FString Suffix = this->DetermineCommonSuffix(QuestionRow->Word, QuestionRow->Reading);
 
-		if (WrongIndex == RightAnswerIndex) {
-			WrongIndex++;
+	TArray<uint32> Answers { RightAnswerIndex };
+	int TotalAnswerBoards = this->AnswerBoards.Num();
+
+	// Prioritise answers that have the same suffix
+	if (this->ReadingsWithSameEnding.Contains(Suffix)) {
+		TArray<uint32> SameEndingAnswers = this->ReadingsWithSameEnding[Suffix];
+		SameEndingAnswers.Remove(RightAnswerIndex);
+
+		while (SameEndingAnswers.Num() > 0 && Answers.Num() < TotalAnswerBoards) {
+			int Index = FMath::RandRange(0, SameEndingAnswers.Num() - 1);
+			Answers.Add(SameEndingAnswers[Index]);
+			SameEndingAnswers.RemoveAt(Index);
+		}
+	}
+
+	// Fill out the rest of the array with any other answers, regardless of their reading
+	while (Answers.Num() < TotalAnswerBoards) {
+		int Index = FMath::RandRange(0, this->FilteredRowNames.Num() - 1);
+
+		if (Answers.Contains(Index)) {
+			continue;
 		}
 
-		FVocabularyTableRow* WrongRow = this->GetTableRow(WrongIndex);
-		AnswerBoard->SetAnswer(WrongRow->Reading, WrongIndex, false);
+		Answers.Add(Index);
 	}
-
-	int RightAnswerBoardIndex = FMath::FRandRange(0.0f, this->AnswerBoards.Num());
-	this->AnswerBoards[RightAnswerBoardIndex]->SetAnswer(Row->Reading, RightAnswerIndex, true);
-	this->RightAnswerBoard = this->AnswerBoards[RightAnswerBoardIndex];
 
 	for (AAnswerBoard* AnswerBoard : this->AnswerBoards) {
+		int AnswerIndex = FMath::RandRange(0, Answers.Num() - 1);
+		int RowIndex = Answers[AnswerIndex];
+		Answers.RemoveAt(AnswerIndex);
+
+		FVocabularyTableRow* AnswerRow = this->GetTableRow(RowIndex);
+		AnswerBoard->SetAnswer(AnswerRow->Reading, RowIndex, RowIndex == RightAnswerIndex);
 		AnswerBoard->Reset();
+
+		if (RightAnswerIndex == RowIndex) {
+			this->RightAnswerBoard = AnswerBoard;
+		}
 	}
 
+	this->MeaningBoard->Reset();
 	this->HandlingAnswer = false;
 }
 

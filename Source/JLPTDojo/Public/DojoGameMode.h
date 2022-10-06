@@ -28,7 +28,11 @@ private:
 	class AMeaningBoard* MeaningBoard;
 	AActor* NextButton;
 	class AQuestionBoardActor* QuestionBoard;
+	TMap<FString, TArray<uint32>> ReadingsWithSameEnding;
 	class AAnswerBoard* RightAnswerBoard;
+
+	template<typename ... TFString>
+	FString DetermineCommonSuffix(TFString... Words) const;
 
 	struct FVocabularyTableRow* GetTableRow(int Index) const;
 	struct FVocabularyTableRow* GetTableRow(FName RowName) const;

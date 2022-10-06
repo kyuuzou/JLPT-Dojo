@@ -15,8 +15,8 @@ class JLPTDOJO_API ADojoGameState : public AGameStateBase {
 public:
 	FScoreChangedSignature OnScoreChanged;
 
-	void BroadcastScoreChanged();
-	int GetNextQuestion();
+	void BroadcastScoreChanged() const;
+	uint32 GetNextQuestion() const;
 	void Initialise(int TotalQuestions_);
 	void ProcessCorrectAnswer(int QuestionIndex);
 	void ProcessWrongAnswer();
@@ -27,5 +27,5 @@ private:
 	int RightAnswers;
 	int TotalQuestions;
 
-	TArray<int> RemainingQuestions;
+	TArray<uint32> RemainingQuestions;
 };
