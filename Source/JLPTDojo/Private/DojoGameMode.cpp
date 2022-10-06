@@ -82,6 +82,20 @@ void ADojoGameMode::OnAnswerBoardBeginOverlap(AActor* OverlappedActor, AActor* O
 }
 
 void ADojoGameMode::OnNextButtonHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) {
+	if (! this->AllowSkip) {
+		return;
+	}
+
+	this->AllowSkip = false;
+
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(
+		UnusedHandle, 
+		FTimerDelegate::CreateLambda([this] { this->AllowSkip = true; }),
+		this->AllowSkipCooldownInSeconds,
+		false
+	);
+
 	this->SetRandomQuestion();
 }
 
@@ -119,6 +133,7 @@ void ADojoGameMode::StartPlay() {
 	Super::StartPlay();
 
 	this->HandlingAnswer = false;
+	this->AllowSkip = true;
 
 	this->InitialiseData();
 	this->InitialiseActors();

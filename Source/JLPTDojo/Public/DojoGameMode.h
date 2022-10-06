@@ -17,6 +17,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	class UDataTable* DataTable;
 
+	UPROPERTY(EditAnywhere, Category = "Flow")
+	float AllowSkipCooldownInSeconds = 1.0f;
+
+	bool AllowSkip;
 	TArray<class AAnswerBoard*> AnswerBoards;
 	class ADojoGameState* DojoGameState;
 	TArray<FName> FilteredRowNames;
