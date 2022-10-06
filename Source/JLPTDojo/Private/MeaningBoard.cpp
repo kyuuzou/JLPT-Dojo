@@ -10,6 +10,13 @@ void AMeaningBoard::PostInitializeComponents() {
 
 	this->MeshComponent = this->FindComponentByClass<UStaticMeshComponent>();
 	this->TextComponent = this->FindComponentByClass<UText3DComponent>();
+	this->DefaultCaption = this->TextComponent->Text;
+}
+
+void AMeaningBoard::Reset() {
+	Super::Reset();
+
+	this->TextComponent->SetText(this->DefaultCaption);
 }
 
 void AMeaningBoard::SetCaption(FString Caption) {

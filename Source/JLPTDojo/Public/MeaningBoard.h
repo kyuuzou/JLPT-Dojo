@@ -12,9 +12,11 @@ class JLPTDOJO_API AMeaningBoard : public AActor {
 
 public:
 	virtual void PostInitializeComponents() override;
+	virtual void Reset() override;
 	void SetCaption(FString Caption);
 
 private:
+	FText DefaultCaption;
 	class UStaticMeshComponent* MeshComponent;
 	class UText3DComponent* TextComponent;
 };
