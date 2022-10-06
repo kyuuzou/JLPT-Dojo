@@ -22,26 +22,25 @@ private:
 
 	bool AllowSkip;
 	TArray<class AAnswerBoard*> AnswerBoards;
+	int CurrentDifficultyLevel;
+	TMap<int, class DataTableWrapper*> DataPerJLPTLevel;
 	class ADojoGameState* DojoGameState;
-	TArray<FName> FilteredRowNames;
 	bool HandlingAnswer;
 	class AMeaningBoard* MeaningBoard;
 	AActor* NextButton;
 	class AQuestionBoardActor* QuestionBoard;
-	TMap<FString, TArray<uint32>> ReadingsWithSameEnding;
 	class AAnswerBoard* RightAnswerBoard;
 
-	template<typename ... TFString>
-	FString DetermineCommonSuffix(TFString... Words) const;
-
-	struct FVocabularyTableRow* GetTableRow(int Index) const;
-	struct FVocabularyTableRow* GetTableRow(FName RowName) const;
+	class DataTableWrapper* GetCurrentData();
 	void InitialiseActors();
 	void InitialiseData();
 	void InitialiseState();
 
 	UFUNCTION()
 	void OnAnswerBoardBeginOverlap(class AActor* OverlappedActor, class AActor* OtherActor);
+
+	UFUNCTION()
+	void OnLevelButtonBeginOverlap(class AActor* OverlappedActor, class AActor* OtherActor);
 
 	UFUNCTION()
 	void OnNextButtonHit(class AActor* SelfActor, class AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);

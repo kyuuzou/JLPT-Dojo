@@ -12,6 +12,7 @@ uint32 ADojoGameState::GetNextQuestion() const {
 
 void ADojoGameState::Initialise(int TotalQuestions_) {
 	this->TotalQuestions = TotalQuestions_;
+	this->CurrentStreak = this->RightAnswers = 0;
 
 	this->RemainingQuestions.Reset();
 
