@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Blackboard.h"
 
 #include "AnswerBoard.generated.h"

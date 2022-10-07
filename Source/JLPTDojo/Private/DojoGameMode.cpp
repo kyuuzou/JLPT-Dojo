@@ -80,7 +80,7 @@ void ADojoGameMode::OnAnswerBoardBeginOverlap(AActor* OverlappedActor, AActor* O
 void ADojoGameMode::OnLevelButtonBeginOverlap(AActor* OverlappedActor, AActor* OtherActor) {
 	AJLPTLevelButton* LevelButton = Cast<AJLPTLevelButton>(OverlappedActor);
 
-	this->CurrentDifficultyLevel = LevelButton->GetLevel();
+	this->CurrentDifficultyLevel = LevelButton->GetJLPTLevel();
 	this->DojoGameState->Initialise(this->GetCurrentData()->GetTotalQuestions());
 	this->SetRandomQuestion();
 }

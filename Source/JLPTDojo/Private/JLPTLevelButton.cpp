@@ -9,6 +9,6 @@ void AJLPTLevelButton::BeginPlay(){
 	this->SetCaption(FText::FromString(Caption));
 }
 
-int AJLPTLevelButton::GetLevel() {
+int AJLPTLevelButton::GetJLPTLevel() const {
 	return this->JLPTLevel;
 }

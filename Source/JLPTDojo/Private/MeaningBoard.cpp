@@ -20,11 +20,11 @@ void AMeaningBoard::Reset() {
 }
 
 void AMeaningBoard::SetCaption(FString Caption) {
-	const FRegexPattern myPattern(TEXT("(?<=1. )[^\\[{\\|]*"));
-	FRegexMatcher myMatcher(myPattern, Caption);
+	const FRegexPattern Pattern(TEXT("(?<=1. )[^\\[{\\|]*"));
+	FRegexMatcher Matcher(Pattern, Caption);
 
-	if (myMatcher.FindNext()) {
-		Caption = myMatcher.GetCaptureGroup(0);
+	if (Matcher.FindNext()) {
+		Caption = Matcher.GetCaptureGroup(0);
 
 		// TODO: revisit the regex, so it also removes the second meaning
 		int secondMeaningIndex = Caption.Find("2. ");
@@ -39,12 +39,12 @@ void AMeaningBoard::SetCaption(FString Caption) {
 	}
 
 	// TODO: Implement proper scaling so the text is always the same size, and remove this
-	int minimumSize = 50;
+	int MinimumSize = 50;
 
-	if (Caption.Len() < minimumSize) {
-		int difference = minimumSize - Caption.Len();
+	if (Caption.Len() < MinimumSize) {
+		int Difference = MinimumSize - Caption.Len();
 
-		for (int i = 0; i < difference; i += 2) {
+		for (int i = 0; i < Difference; i += 2) {
 			Caption.InsertAt(0, ' ');
 			Caption.InsertAt(Caption.Len(), ' ');
 		}

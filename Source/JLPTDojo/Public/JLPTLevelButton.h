@@ -13,7 +13,7 @@ class JLPTDOJO_API AJLPTLevelButton : public ABlackboard
 	GENERATED_BODY()
 
 public:
-	int GetLevel();
+	int GetJLPTLevel() const;
 
 protected:
 	virtual void BeginPlay() override;
