@@ -23,7 +23,7 @@ An Unreal VR game, where you can prepare for the JLPT (Japanese-Language Profici
 
 ## Preview
 
-[![Gameplay Video](https://github.com/kyuuzou/JLPT-Dojo/blob/master/thumbnail.png)](https://www.youtube.com/watch?v=pkpPXf9Htxo "Gameplay Video")
+[![Gameplay Video](https://github.com/kyuuzou/JLPT-Dojo/blob/master/thumbnail.png)](https://youtu.be/-TCAOCc0cuo "Gameplay Video")
 
 ## Why it Exists
 
@@ -35,15 +35,22 @@ Never having enough time for my hobbies - namely gaming, playing around with VR,
 - [x] Have multiple targets with the right answer, and random other answers.
 - [x] Let the player shoot the targets.
 - [x] Implement VR support.
-- [ ] Let the player specify JLPT levels.
+- [x] Let the player specify JLPT levels.
 - [ ] Have support for learning Hiragana and Katakana.
 - [ ] Have support for learning vocabulary.
 - [ ] Have support for learning grammar.
 - [ ] Have support for preparing for the Audio section of the JLPT.
 - [ ] Implement SRS mechanics.
+- [ ] Have clear support for the various stages of all JLPT sections.
 - [ ] Integrate Text-to-Speech to read the right answer out loud.
 
 ## Version History
+
+* *0.2.0*
+    * Added N4 through N1 kanji to the database, covering all JLPT levels.
+    * Player may now select the intended JLPT level.
+    * Answers are now prioritised, showing readings that have the same kana, when available.
+    * Built a dojo!
 
 * *0.1.0*
     * Added database with N5 kanji, respective reading and meaning.
