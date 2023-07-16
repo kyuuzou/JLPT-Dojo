@@ -2,7 +2,7 @@
 	"source": "UE",
 	"applications": [
 		{
-			"app_key": "application.generated.ue.jlptdojo-20979098.unrealeditor.exe",
+			"app_key": "application.generated.ue.jlptdojo-26001984.unrealeditor.exe",
 			"launch_type": "url",
 			"url": "steam://launch/",
 			"action_manifest_path": "C:/Users/Kyu/Documents/Unreal Projects/Portfolio/Config/SteamVRBindings/steamvr_manifest.json",
@@ -10,7 +10,7 @@
 			{
 				"en_us":
 				{
-					"name": "JLPTDojo-20979098 [UE Editor]"
+					"name": "JLPTDojo-26001984 [UE Editor]"
 				}
 			}
 		}
